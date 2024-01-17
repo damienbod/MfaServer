@@ -26,10 +26,10 @@ public class Worker : IHostedService
         {
             var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            //var clientApp = await manager.FindByClientIdAsync("oidc-pkce-confidential");
+            //var clientApp = await manager.FindByClientIdAsync("oidc-implicit-mfa-confidential");
             //await manager.DeleteAsync(clientApp);
 
-            if (await manager.FindByClientIdAsync("oidc-pkce-confidential") is null)
+            if (await manager.FindByClientIdAsync("oidc-implicit-mfa-confidential") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
