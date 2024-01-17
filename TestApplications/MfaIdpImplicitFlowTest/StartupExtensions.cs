@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MfaIdpImplicitFlowTest;
 
@@ -41,7 +42,13 @@ internal static class StartupExtensions
             options.UsePkce = false;
             options.GetClaimsFromUserInfoEndpoint = false;
             options.Scope.Add("email");
+      
             options.SaveTokens = true;
+
+            options.Events = new OpenIdConnectEvents
+            {
+                OnRedirectToIdentityProvider = OnRedirectToIdentityProvider,
+            };
         });
 
         services.AddAuthorization();
@@ -50,7 +57,30 @@ internal static class StartupExtensions
 
         return builder.Build();
     }
-    
+
+    private static async Task OnRedirectToIdentityProvider(RedirectContext context)
+    {
+        var developmentCertificatePfx = Path.Combine(_env!.ContentRootPath, "sts_dev_cert.pfx");
+        var activeCertificate = new X509Certificate2(developmentCertificatePfx, "1234");
+
+        var payload = new CreateDelegatedTestIdTokenPayloadModel
+        {
+            Version = "2.0",
+            Issuer = "https://login.microsoftonline.com/9122040d-6c67-4c5b-b112-36a304b66dad/v2.0",
+            Sub = "mBfcvuhSHkDWVgV72x2ruIYdSsPSvcj2R0qfc6mGEAA",
+            Audience = "600b719b-3766-4dc5-95a6-3c4a8dc31885",
+            Name = "Damien tes",
+            PreferredUsername =  "testuser2@contoso.com",
+            Oid =  "951ddb04-b16d-45f3-bbf7-b0fa18fa7aee",
+            Tid = "14c2f153-90a7-4689-9db7-9543bf084dad",
+
+            SigningCredentials = activeCertificate
+        };
+
+        context.ProtocolMessage.IdTokenHint =
+            CreateDelegatedAccessTokenPayload.GenerateJwtTokenAsync(payload);
+    }
+
     public static WebApplication Configure(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
