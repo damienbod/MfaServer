@@ -16,6 +16,7 @@ using OpenIddict.Server.AspNetCore;
 using OpeniddictServer.Data;
 using OpeniddictServer.Helpers;
 using OpeniddictServer.ViewModels.Authorization;
+using Polly;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -163,6 +164,22 @@ public class AuthorizationController : Controller
                 foreach (var claim in principal.Claims)
                 {
                     claim.SetDestinations(GetDestinations(claim, principal));
+                }
+
+
+                var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
+
+                if (amrClaim != null && amrClaim.Value == "mfa") // need to fix to FIDO
+                {
+                    var amr = new Claim("amr", "fido");
+                    principal.AddClaim("amr", "fido");
+
+                    // must be read from the claims request
+                    var acr = new Claim("acr", "possessionorinherence");
+                    principal.AddClaim("acr", "possessionorinherence");
+
+                    amr.SetDestinations(GetDestinations(amr, principal));
+                    acr.SetDestinations(GetDestinations(acr, principal));
                 }
 
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -399,6 +416,14 @@ public class AuthorizationController : Controller
 
         switch (claim.Type)
         {
+            case "amr":
+                yield return Destinations.IdentityToken;
+                yield break;
+
+            case "acr":
+                yield return Destinations.IdentityToken;
+                yield break;
+
             case Claims.Name:
                 yield return Destinations.AccessToken;
 
