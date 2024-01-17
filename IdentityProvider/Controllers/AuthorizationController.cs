@@ -161,25 +161,18 @@ public class AuthorizationController : Controller
 
                 principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
 
-                foreach (var claim in principal.Claims)
-                {
-                    claim.SetDestinations(GetDestinations(claim, principal));
-                }
-
-
                 var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
 
                 if (amrClaim != null && amrClaim.Value == "mfa") // need to fix to FIDO
                 {
-                    var amr = new Claim("amr", "fido");
                     principal.AddClaim("amr", "fido");
-
                     // must be read from the claims request
-                    var acr = new Claim("acr", "possessionorinherence");
                     principal.AddClaim("acr", "possessionorinherence");
+                }
 
-                    amr.SetDestinations(GetDestinations(amr, principal));
-                    acr.SetDestinations(GetDestinations(acr, principal));
+                foreach (var claim in principal.Claims)
+                {
+                    claim.SetDestinations(GetDestinations(claim, principal));
                 }
 
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
