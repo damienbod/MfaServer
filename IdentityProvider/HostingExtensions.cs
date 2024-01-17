@@ -77,7 +77,6 @@ internal static class HostingExtensions
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
         services.AddQuartz(options =>
         {
-            options.UseMicrosoftDependencyInjectionJobFactory();
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
         });
@@ -105,20 +104,16 @@ internal static class HostingExtensions
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("/connect/authorize")
                           .SetLogoutEndpointUris("/connect/logout")
-                          .SetIntrospectionEndpointUris("/connect/introspect")
                           .SetTokenEndpointUris("/connect/token")
                           .SetUserinfoEndpointUris("/connect/userinfo")
                           .SetVerificationEndpointUris("/connect/verify");
 
                 // Note: this sample uses the code, device code, password and refresh token flows, but you
                 // can enable the other flows if you need to support implicit or client credentials.
-                options.AllowAuthorizationCodeFlow()
-                       .AllowClientCredentialsFlow()
-                       .AllowHybridFlow()
-                       .AllowRefreshTokenFlow();
+                options.AllowImplicitFlow();
 
                 // Mark the "email", "profile", "roles" and "dataEventRecords" scopes as supported scopes.
-                options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles, "dataEventRecords");
+                options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
                 // remove this with introspection, added security
                 options.DisableAccessTokenEncryption();
@@ -149,7 +144,6 @@ internal static class HostingExtensions
         // Register the worker responsible of seeding the database.
         // Note: in a real world application, this step should be part of a setup script.
         services.AddHostedService<Worker>();
-
 
         return builder.Build();
     }

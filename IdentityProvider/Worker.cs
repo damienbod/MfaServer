@@ -26,50 +26,38 @@ public class Worker : IHostedService
         {
             var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            //var dd = await manager.FindByClientIdAsync("oidc-pkce-confidential");
+            //var clientApp = await manager.FindByClientIdAsync("oidc-pkce-confidential");
+            //await manager.DeleteAsync(clientApp);
 
-            //await manager.DeleteAsync(dd);
-
-            // OIDC Code flow confidential client
             if (await manager.FindByClientIdAsync("oidc-pkce-confidential") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "oidc-pkce-confidential",
-                    ConsentType = ConsentTypes.Explicit,
-                    DisplayName = "OIDC confidential Code Flow PKCE",
+                    ClientId = "oidc-implicit-mfa-confidential", 
+                    ConsentType = ConsentTypes.Implicit,
+                    DisplayName = "OIDC Implicit Flow for MFA",
                     DisplayNames =
                     {
                         [CultureInfo.GetCultureInfo("fr-FR")] = "Application cliente MVC"
                     },
                     PostLogoutRedirectUris =
                     {
-                        new Uri("https://localhost:5001/signout-callback-oidc"),
-                        new Uri("https://localhost:64265/signout-callback-oidc")
+                        new Uri("https://localhost:5001/signout-callback-oidc")
                     },
                     RedirectUris =
                     {
-                        new Uri("https://localhost:5001/signin-oidc"),
-                        new Uri("https://localhost:64265/signin-oidc"),
+                        new Uri("https://localhost:5001/signin-oidc")
                     },
-                    ClientSecret = "oidc-pkce-confidential_secret",
+                    ClientSecret = "oidc-id_token-confidential_secret",
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Logout,
-                        Permissions.Endpoints.Token,
                         Permissions.Endpoints.Revocation,
-                        Permissions.GrantTypes.AuthorizationCode,
-                        Permissions.GrantTypes.RefreshToken,
-                        Permissions.ResponseTypes.Code,
+                        Permissions.GrantTypes.Implicit,
+                        Permissions.ResponseTypes.IdToken,
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,
-                        Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "dataEventRecords"
-                    },
-                    Requirements =
-                    {
-                        Requirements.Features.ProofKeyForCodeExchange
+                        Permissions.Scopes.Roles
                     }
                 });
             }
