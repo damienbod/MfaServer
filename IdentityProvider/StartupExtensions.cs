@@ -11,7 +11,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace OpeniddictServer;
 
-internal static class HostingExtensions
+internal static class StartupExtensions
 {
     private static IWebHostEnvironment _env;
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
@@ -146,7 +146,7 @@ internal static class HostingExtensions
         return builder.Build();
     }
 
-    public static WebApplication ConfigurePipeline(this WebApplication app)
+    public static WebApplication Configure(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

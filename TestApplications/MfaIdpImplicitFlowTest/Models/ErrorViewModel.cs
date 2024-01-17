@@ -1,4 +1,4 @@
-namespace WebHybridClient.Models;
+namespace MfaIdpImplicitFlowTest.Models;
 
 public class ErrorViewModel
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebHybridClient.Controllers;
+namespace MfaIdpImplicitFlowTest.Controllers;
 
 [Route("[controller]")]
 public class StatusController : Controller

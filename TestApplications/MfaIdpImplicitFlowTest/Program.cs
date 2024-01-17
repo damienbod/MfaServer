@@ -1,6 +1,6 @@
 ﻿using Azure.Identity;
 using Serilog;
-using WebHybridClient;
+using MfaIdpImplicitFlowTest;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -37,7 +37,7 @@ try
 
     var app = builder
         .ConfigureServices()
-        .ConfigurePipeline();
+        .Configure();
 
     app.Run();
 }

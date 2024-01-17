@@ -1,24 +1,16 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebHybridClient.Models;
+using MfaIdpImplicitFlowTest.Models;
 
-namespace WebHybridClient.Controllers;
+namespace MfaIdpImplicitFlowTest.Controllers;
 
 [Authorize]
 public class HomeController : Controller
 {
-    private readonly ApiService _apiService;
-
-    public HomeController(ApiService apiService)
-    {
-        _apiService = apiService;
-    }
-
     public async Task<IActionResult> Index()
     {
-        var result = await _apiService.GetApiDataAsync();
-        return View(result);
+        return View();
     }
 
     public IActionResult Error()

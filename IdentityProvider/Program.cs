@@ -19,7 +19,7 @@ try
 
     var app = builder
         .ConfigureServices()
-        .ConfigurePipeline();
+        .Configure();
 
     app.Run();
 }

@@ -4,9 +4,9 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
 
-namespace WebHybridClient;
+namespace MfaIdpImplicitFlowTest;
 
-internal static class HostingExtensions
+internal static class StartupExtensions
 {
     private static IWebHostEnvironment? _env;
 
@@ -16,15 +16,11 @@ internal static class HostingExtensions
         var configuration = builder.Configuration;
         _env = builder.Environment;
 
-        services.AddTransient<ApiService>();
-        services.AddSingleton<ApiTokenInMemoryClient>();
-        services.AddSingleton<ApiTokenCacheClient>();
-
         services.AddHttpClient();
         services.Configure<AuthConfigurations>(configuration.GetSection("AuthConfigurations"));
 
         var authConfigurations = configuration.GetSection("AuthConfigurations");
-        var stsServer = authConfigurations["StsServer"];
+        var mfaProvider = authConfigurations["MfaProvider"];
 
         services.AddDistributedMemoryCache();
 
@@ -37,7 +33,7 @@ internal static class HostingExtensions
         .AddOpenIdConnect(options =>
         {
             options.SignInScheme = "Cookies";
-            options.Authority = stsServer;
+            options.Authority = mfaProvider;
             options.RequireHttpsMetadata = true;
             options.ClientId = "oidc-implicit-mfa-confidential";
             options.ClientSecret = "oidc-id_token-confidential_secret";
@@ -55,7 +51,7 @@ internal static class HostingExtensions
         return builder.Build();
     }
     
-    public static WebApplication ConfigurePipeline(this WebApplication app)
+    public static WebApplication Configure(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
