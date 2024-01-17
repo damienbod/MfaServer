@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "WebHybridClient": {
+    "MfaIdpImplicitFlowTest": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
