@@ -4,21 +4,30 @@ async function handleRegisterSubmit(event) {
     event.preventDefault();
 
     let username = this.username.value;
-    //let displayName = this.displayName.value;
-    // passwordfield is omitted in demo
-    // let password = this.password.value;
+    if (!(/^\S+@\S+\.\S+$/.test(username))) {
+        let msg = "Invalid username";
+        console.error(msg);
+        showErrorAlert(msg);
+        return;
+    }
+
+    let displayName = this.displayName.value;
+
     // possible values: none, direct, indirect
     let attestation_type = "none";
     // possible values: <empty>, platform, cross-platform
     let authenticator_attachment = "";
+
     // possible values: preferred, required, discouraged
-    let user_verification = "preferred";
+    let user_verification = "required";
+
     // possible values: true,false
     let require_resident_key = false;
+
     // prepare form post data
     var data = new FormData();
     data.append('username', username);
-   // data.append('displayName', displayName);
+    data.append('displayName', displayName);
     data.append('attType', attestation_type);
     data.append('authType', authenticator_attachment);
     data.append('userVerification', user_verification);
@@ -35,7 +44,7 @@ async function handleRegisterSubmit(event) {
         showErrorAlert(msg);
     }
 
-    //console.log("Credential Options Object", makeCredentialOptions);
+    console.log("Credential Options Object", makeCredentialOptions);
 
     if (makeCredentialOptions.status !== "ok") {
         console.log("Error creating credential options");
@@ -54,39 +63,32 @@ async function handleRegisterSubmit(event) {
         return c;
     });
 
-    if (makeCredentialOptions.authenticatorSelection.authenticatorAttachment === null) {
-        makeCredentialOptions.authenticatorSelection.authenticatorAttachment = undefined;
-    }
+    if (makeCredentialOptions.authenticatorSelection.authenticatorAttachment === null) makeCredentialOptions.authenticatorSelection.authenticatorAttachment = undefined;
 
-    //console.log("Credential Options Formatted", makeCredentialOptions);
+    console.log("Credential Options Formatted", makeCredentialOptions);
 
-    const fido2TapYourSecurityKeyToFinishRegistration = document.getElementById('fido2TapYourSecurityKeyToFinishRegistration').innerText;
-    document.getElementById('fido2mfadisplay').innerHTML += '<br><b>' + fido2TapYourSecurityKeyToFinishRegistration +'</b><img src = "/images/securitykey.min.svg" alt = "fido login" />';
+    Swal.fire({
+        title: 'Registering...',
+        text: 'Tap your security key to finish registration.',
+        imageUrl: getFolder() + "/images/securitykey.min.svg",
+        showCancelButton: true,
+        showConfirmButton: false,
+        focusConfirm: false,
+        focusCancel: false
+    });
 
-    //Swal.fire({
-    //    title: 'Registering...',
-    //    text: 'Tap your security key to finish registration.',
-    //    imageUrl: "/images/securitykey.min.svg",
-    //    showCancelButton: true,
-    //    showConfirmButton: false,
-    //    focusConfirm: false,
-    //    focusCancel: false
-    //});
 
-    //console.log("Creating PublicKeyCredential...");
-    //console.log(navigator);
-    //console.log(navigator.credentials);
-    //console.log(makeCredentialOptions);
+    console.log("Creating PublicKeyCredential...");
+
     let newCredential;
     try {
         newCredential = await navigator.credentials.create({
             publicKey: makeCredentialOptions
         });
     } catch (e) {
-        const fido2RegistrationError = document.getElementById('fido2RegistrationError').innerText;
-        console.error(fido2RegistrationError, e);
-        document.getElementById('fido2mfadisplay').innerHTML = '';
-        showErrorAlert(fido2RegistrationError, e);
+        var msg = "Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator."
+        console.error(msg, e);
+        showErrorAlert(msg, e);
     }
 
     console.log("PublicKeyCredential Created", newCredential);
@@ -100,7 +102,9 @@ async function handleRegisterSubmit(event) {
 }
 
 async function fetchMakeCredentialOptions(formData) {
-    let response = await fetch('/mfamakeCredentialOptions', {
+    id = "RequestVerificationToken" 
+
+    let response = await fetch(getFolder() + '/pwmakeCredentialOptions', {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!
         headers: {
@@ -113,6 +117,7 @@ async function fetchMakeCredentialOptions(formData) {
 
     return data;
 }
+
 
 // This should be used to verify the auth data with the server
 async function registerNewCredential(newCredential) {
@@ -139,7 +144,7 @@ async function registerNewCredential(newCredential) {
         showErrorAlert(e);
     }
 
-    //console.log("Credential Object", response);
+    console.log("Credential Object", response);
 
     // show error
     if (response.status !== "ok") {
@@ -153,16 +158,16 @@ async function registerNewCredential(newCredential) {
     Swal.fire({
         title: 'Registration Successful!',
         text: 'You\'ve registered successfully.',
-       // type: 'success',
+        // type: 'success',
         timer: 2000
     });
 
-    // possible values: true,false
-    window.location.href = "/Identity/Account/Manage/GenerateRecoveryCodes";
+    // redirect to dashboard?
+    //window.location.href = "/dashboard/" + state.user.displayName;
 }
 
 async function registerCredentialWithServer(formData) {
-    let response = await fetch('/mfamakeCredential', {
+    let response = await fetch(getFolder() + '/pwmakeCredential', {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(formData), // data can be `string` or {object}!
         headers: {

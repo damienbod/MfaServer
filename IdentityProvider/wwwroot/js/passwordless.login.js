@@ -1,25 +1,22 @@
-﻿//document.getElementById('signin').addEventListener('click', handleSignInSubmit);
-
-window.onload = function () {
-    handleSignInSubmit();
-};
+﻿document.getElementById('signin').addEventListener('submit', handleSignInSubmit);
 
 async function handleSignInSubmit(event) {
-    //event.preventDefault();
+    event.preventDefault();
 
-    //let username = this.username.value;
-    // passwordfield is omitted in demo
-    // let password = this.password.value;
+    let username = this.username.value;
+
+    // possible values: preferred, required, discouraged
+    let user_verification = "required";
+
     // prepare form post data
     var formData = new FormData();
-    //formData.append('username', username);
-    // not done in demo
-    // todo: validate username + password with server (has nothing to do with FIDO2/WebAuthn)
+    formData.append('username', username);
+    formData.append('userVerification', user_verification);
 
     // send to server for registering
     let makeAssertionOptions;
     try {
-        var res = await fetch('/mfaassertionOptions', {
+        var res = await fetch(getFolder() + '/pwassertionOptions', {
             method: 'POST', // or 'PUT'
             body: formData, // data can be `string` or {object}!
             headers: {
@@ -55,40 +52,33 @@ async function handleSignInSubmit(event) {
 
     //console.log("Assertion options", makeAssertionOptions);
 
-    const fido2TapKeyToLogin = document.getElementById('fido2TapKeyToLogin').innerText;
-    document.getElementById('fido2logindisplay').innerHTML += '<br><b>' + fido2TapKeyToLogin + '</b><img src = "/images/securitykey.min.svg" alt = "fido login" />';
-
-    //Swal.fire({
-    //    title: 'Logging In...',
-    //    text: 'Tap your security key to login.',
-    //    imageUrl: "/images/securitykey.min.svg",
-    //    showCancelButton: true,
-    //    showConfirmButton: false,
-    //    focusConfirm: false,
-    //    focusCancel: false
-    //});
+    Swal.fire({
+        title: 'Logging In...',
+        text: 'Tap your security key to login.',
+        imageUrl: getFolder() + "/images/securitykey.min.svg",
+        showCancelButton: true,
+        showConfirmButton: false,
+        focusConfirm: false,
+        focusCancel: false
+    });
 
     // ask browser for credentials (browser will ask connected authenticators)
     let credential;
     try {
-        credential = await navigator.credentials.get({ publicKey: makeAssertionOptions });
+        credential = await navigator.credentials.get({ publicKey: makeAssertionOptions })
     } catch (err) {
-        document.getElementById('fido2logindisplay').innerHTML = '';
         showErrorAlert(err.message ? err.message : err);
     }
-
-    //document.getElementById('fido2logindisplay').innerHTML = '<p>Processing</p>';
 
     try {
         await verifyAssertionWithServer(credential);
     } catch (e) {
-        document.getElementById('fido2logindisplay').innerHTML = '';
-        const fido2CouldNotVerifyAssertion = document.getElementById('fido2CouldNotVerifyAssertion').innerText;
-        showErrorAlert(fido2CouldNotVerifyAssertion, e);
+        showErrorAlert("Could not verify assertion", e);
     }
 }
 
 async function verifyAssertionWithServer(assertedCredential) {
+
     // Move data into Arrays incase it is super long
     let authData = new Uint8Array(assertedCredential.response.authenticatorData);
     let clientDataJSON = new Uint8Array(assertedCredential.response.clientDataJSON);
@@ -103,14 +93,14 @@ async function verifyAssertionWithServer(assertedCredential) {
         response: {
             authenticatorData: coerceToBase64Url(authData),
             clientDataJson: coerceToBase64Url(clientDataJSON),
-            //userHandle: userHandle !== null ? coerceToBase64Url(userHandle) : null,
+            userHandle: userHandle !== null && userHandle.length > 0 ? coerceToBase64Url(userHandle) : null,
             signature: coerceToBase64Url(sig)
         }
     };
 
     let response;
     try {
-        let res = await fetch("/mfamakeAssertion", {
+        let res = await fetch(getFolder() + "/pwmakeAssertion", {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers: {
@@ -132,23 +122,22 @@ async function verifyAssertionWithServer(assertedCredential) {
     if (response.status !== "ok") {
         console.log("Error doing assertion");
         console.log(response.errorMessage);
-        document.getElementById('fido2logindisplay').innerHTML = '';
         showErrorAlert(response.errorMessage);
         return;
     }
 
-    //document.getElementById('fido2logindisplay').innerHTML = '<p>Logged In!</p>';
-
     // show success message
-    //await Swal.fire({
-    //    title: 'Logged In!',
-    //    text: 'You\'re logged in successfully.',
-    //    //type: 'success',
-    //    timer: 2000
-    //});
-    let fido2ReturnUrl = document.getElementById('fido2ReturnUrl').innerText;
-    if (!fido2ReturnUrl) {
-        fido2ReturnUrl = "/";
+    await Swal.fire({
+        title: 'Logged In!',
+        text: 'You\'re logged in successfully.',
+        // type: 'success',
+        timer: 2000
+    });
+
+    let returnUrl = findGetParameter('ReturnUrl');
+    if (!returnUrl) {
+        returnUrl = window.location.origin;
     }
-    window.location.href = fido2ReturnUrl;
+
+    window.location.href = returnUrl;
 }
