@@ -44,7 +44,13 @@ public class PwFido2RegisterController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("/pwmakeCredentialOptions")]
-    public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, [FromForm] string displayName, [FromForm] string attType, [FromForm] string authType, [FromForm] bool requireResidentKey, [FromForm] string userVerification)
+    public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, 
+        [FromForm] string displayName,
+        [FromForm] string entraIdOid,       
+        [FromForm] string attType, 
+        [FromForm] string authType, 
+        [FromForm] bool requireResidentKey, 
+        [FromForm] string userVerification)
     {
         try
         {

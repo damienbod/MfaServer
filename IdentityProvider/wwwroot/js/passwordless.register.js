@@ -12,7 +12,7 @@ async function handleRegisterSubmit(event) {
     }
 
     let displayName = this.displayName.value;
-
+    let entraIdOid = this.entraIdOid.value;
     // possible values: none, direct, indirect
     let attestation_type = "none";
     // possible values: <empty>, platform, cross-platform
@@ -28,6 +28,7 @@ async function handleRegisterSubmit(event) {
     var data = new FormData();
     data.append('username', username);
     data.append('displayName', displayName);
+    data.append('entraIdOid', entraIdOid);
     data.append('attType', attestation_type);
     data.append('authType', authenticator_attachment);
     data.append('userVerification', user_verification);
