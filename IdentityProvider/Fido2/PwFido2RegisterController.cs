@@ -59,6 +59,8 @@ public class PwFido2RegisterController : Controller
                 username = $"{displayName} (Usernameless user created at {DateTime.UtcNow})";
             }
 
+            var dbUser = await CreateOrFindUser(username, entraIdOid);
+
             var user = new Fido2User
             {
                 DisplayName = displayName,
@@ -117,7 +119,7 @@ public class PwFido2RegisterController : Controller
             var options = CredentialCreateOptions.FromJson(jsonOptions);
 
             // 1b. find or create the user
-            var user = await CreateOrFindUser(options.User.Name);
+            var user = await CreateOrFindUser(options.User.Name, null);
             if (user == null)
             {
                 return Json(new CredentialMakeResult("error",
@@ -161,9 +163,21 @@ public class PwFido2RegisterController : Controller
         }
     }
 
-    private async Task<ApplicationUser> CreateOrFindUser(string userEmail)
+    private async Task<ApplicationUser> CreateOrFindUser(string userEmail, string entraIdOid)
     {
-        var user = new ApplicationUser { UserName = userEmail, Email = userEmail, EmailConfirmed = true };
+        var user = new ApplicationUser { 
+            UserName = userEmail, 
+            Email = userEmail, 
+            EntraIdOid = entraIdOid,  
+            EmailConfirmed = true 
+        };
+
+        var find = await _userManager.FindByEmailAsync(userEmail);
+        if (find != null)
+        {
+            return find;
+        }
+
         var result = await _userManager.CreateAsync(user);
         if (result.Succeeded)
         {
