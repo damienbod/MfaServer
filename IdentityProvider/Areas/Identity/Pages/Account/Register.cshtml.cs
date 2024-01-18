@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace AspNetCoreIdentityFido2Passwordless.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class LoginModel : PageModel
+public class RegisterModel : PageModel
 {
     public void OnGet()
     {
