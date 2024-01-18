@@ -18,6 +18,7 @@ using OpeniddictServer.Helpers;
 using OpeniddictServer.ViewModels.Authorization;
 using Polly;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace OpeniddictServer.Controllers;
@@ -174,6 +175,10 @@ public class AuthorizationController : Controller
                 {
                     claim.SetDestinations(GetDestinations(claim, principal));
                 }
+
+                // TODO Add validation
+                var entraIdOid = user.EntraIdOid;
+                // Oid from id_token_hint must match User OID
 
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
