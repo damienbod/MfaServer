@@ -10,16 +10,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using OpeniddictServer.Data;
 using OpeniddictServer.Helpers;
 using OpeniddictServer.ViewModels.Authorization;
-using Polly;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using Microsoft.Extensions.Options;
+using IdentityProvider.IdTokenHintValidation;
 
 namespace OpeniddictServer.Controllers;
 
@@ -30,19 +32,22 @@ public class AuthorizationController : Controller
     private readonly IOpenIddictScopeManager _scopeManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IdTokenHintValidationConfiguration _idTokenHintValidationConfiguration;
 
     public AuthorizationController(
         IOpenIddictApplicationManager applicationManager,
         IOpenIddictAuthorizationManager authorizationManager,
         IOpenIddictScopeManager scopeManager,
         SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        IOptions<IdTokenHintValidationConfiguration> idTokenHintValidationConfiguration)
     {
         _applicationManager = applicationManager;
         _authorizationManager = authorizationManager;
         _scopeManager = scopeManager;
         _signInManager = signInManager;
         _userManager = userManager;
+        _idTokenHintValidationConfiguration = idTokenHintValidationConfiguration.Value;
     }
 
     [HttpGet("~/connect/authorize")]
@@ -162,6 +167,21 @@ public class AuthorizationController : Controller
 
                 principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
 
+                //get well known endpoints and validate access token sent in the assertion
+                var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                    _idTokenHintValidationConfiguration.IdTokenHintMetadataAddress,
+                    new OpenIdConnectConfigurationRetriever());
+
+                var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
+
+                var testingMode = true;
+
+                var idTokenHintValidationResult = ValidateIdTokenHintRequestPayload.ValidateTokenAndSignature(
+                    request.IdTokenHint,
+                    _idTokenHintValidationConfiguration,
+                    wellKnownEndpoints.SigningKeys,
+                    testingMode);
+
                 var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
 
                 if (amrClaim != null && amrClaim.Value == "mfa") // need to fix to FIDO
@@ -179,6 +199,7 @@ public class AuthorizationController : Controller
                 // TODO Add validation
                 var entraIdOid = user.EntraIdOid;
                 // Oid from id_token_hint must match User OID
+                //_idTokenHintValidationConfiguration.ClientId == request.ClientId;
 
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 

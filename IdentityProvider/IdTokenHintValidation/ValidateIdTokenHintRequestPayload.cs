@@ -10,7 +10,7 @@ public static class ValidateIdTokenHintRequestPayload
     public static (bool Valid, string Reason, string Error) IsValid(ClaimsPrincipal claimsIdTokenPrincipal, IdTokenHintValidationConfiguration configuration)
     {
         var aud = claimsIdTokenPrincipal.FindFirst("aud").Value;
-        if (!aud!.Equals(configuration.Audience))
+        if (!aud!.Equals(configuration.IdTokenAudience))
         {
             return (false, "client_id parameter has an incorrect value",
                 EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
@@ -21,8 +21,9 @@ public static class ValidateIdTokenHintRequestPayload
 
     public static (bool Valid, string Reason, ClaimsPrincipal ClaimsPrincipal) ValidateTokenAndSignature(
         string jwtToken,
-        IdTokenHintValidationConfiguration oboConfiguration,
-        ICollection<SecurityKey> signingKeys)
+        IdTokenHintValidationConfiguration idTokenConfiguration,
+        ICollection<SecurityKey> signingKeys, 
+        bool testingMode)
     {
         try
         {
@@ -35,10 +36,15 @@ public static class ValidateIdTokenHintRequestPayload
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKeys = signingKeys,
                 ValidateIssuer = true,
-                ValidIssuer = oboConfiguration.AccessTokenAuthority,
+                ValidIssuer = idTokenConfiguration.IdTokenAuthority,
                 ValidateAudience = true,
-                ValidAudience = oboConfiguration.AccessTokenAudience
+                ValidAudience = idTokenConfiguration.IdTokenAudience
             };
+
+            if(testingMode)
+            {
+                validationParameters.ValidateIssuerSigningKey = false;
+            }
 
             ISecurityTokenValidator tokenValidator = new JwtSecurityTokenHandler();
 
