@@ -22,6 +22,7 @@ using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using Microsoft.Extensions.Options;
 using IdentityProvider.IdTokenHintValidation;
+using System.Security.Cryptography;
 
 namespace OpeniddictServer.Controllers;
 
@@ -186,6 +187,7 @@ public class AuthorizationController : Controller
 
                 var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
 
+                // TODO read claim from request claim
                 if (amrClaim != null && amrClaim.Value == "mfa") // need to fix to FIDO
                 {
                     principal.AddClaim("amr", "fido");
@@ -200,7 +202,10 @@ public class AuthorizationController : Controller
 
                 // TODO Add validation
                 var entraIdOid = user.EntraIdOid;
-                // Oid from id_token_hint must match User OID
+                // oid from id_token_hint must match User OID
+                // preferred_username from id_token_hint
+                // tid must match allowed tenant
+                // aud must match allowed audience
                 //_idTokenHintValidationConfiguration.ClientId == request.ClientId;
 
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
