@@ -155,7 +155,7 @@ public class PwFido2RegisterController : Controller
         }
     }
 
-    private async Task<ApplicationUser> CreateUser(string userEmail)
+    private async Task<ApplicationUser> CreateOrFindUser(string userEmail)
     {
         var user = new ApplicationUser { UserName = userEmail, Email = userEmail, EmailConfirmed = true };
         var result = await _userManager.CreateAsync(user);

@@ -52,19 +52,19 @@ public class MfaFido2RegisterController : Controller
                 username = $"{displayName} (Usernameless user created at {DateTime.UtcNow})";
             }
 
-            var ApplicationUser = await _userManager.FindByEmailAsync(username);
+            var applicationUser = await _userManager.FindByEmailAsync(username);
             var user = new Fido2User
             {
-                DisplayName = ApplicationUser.UserName,
-                Name = ApplicationUser.UserName,
-                Id = Encoding.UTF8.GetBytes(ApplicationUser.UserName) // byte representation of userID is required
+                DisplayName = applicationUser.UserName,
+                Name = applicationUser.UserName,
+                Id = Encoding.UTF8.GetBytes(applicationUser.UserName) // byte representation of userID is required
             };
 
             // 2. Get user existing keys by username
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
-            if (identityUser.UserName != null)
+            if (applicationUser.UserName != null)
             {
-                var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(applicationUser.UserName);
                 foreach (var publicKeyCredentialDescriptor in items)
                 {
                     if (publicKeyCredentialDescriptor.Descriptor != null)

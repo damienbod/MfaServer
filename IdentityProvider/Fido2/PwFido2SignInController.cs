@@ -55,20 +55,20 @@ public class PwFido2SignInController : Controller
 
             if (!string.IsNullOrEmpty(username))
             {
-                var ApplicationUser = await _userManager.FindByNameAsync(username);
-                if (identityUser == null) throw new ArgumentException("Username not found");
+                var applicationUser = await _userManager.FindByNameAsync(username);
+                if (applicationUser == null) throw new ArgumentException("Username not found");
 
                 var user = new Fido2User
                 {
-                    DisplayName = ApplicationUser.UserName,
-                    Name = ApplicationUser.UserName,
-                    Id = Encoding.UTF8.GetBytes(ApplicationUser.UserName) // byte representation of userID is required
+                    DisplayName = applicationUser.UserName,
+                    Name = applicationUser.UserName,
+                    Id = Encoding.UTF8.GetBytes(applicationUser.UserName) // byte representation of userID is required
                 };
 
                 if (user == null) throw new ArgumentException("Username was not registered");
 
                 // 2. Get registered credentials from database
-                var items = await _fido2Store.GetCredentialsByUserNameAsync(ApplicationUser.UserName);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(applicationUser.UserName);
                 existingCredentials = items.Select(c => c.Descriptor).NotNull().ToList();
             }
 
