@@ -13,7 +13,6 @@ namespace Fido2Identity;
 public class MfaFido2RegisterController : Controller
 {
     private readonly Fido2 _lib;
-    public static IMetadataService? _mds;
     private readonly Fido2Store _fido2Store;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IOptions<Fido2Configuration> _optionsFido2Configuration;
@@ -62,12 +61,15 @@ public class MfaFido2RegisterController : Controller
             };
 
             // 2. Get user existing keys by username
-            var items = await _fido2Store.GetCredentialsByUserNameAsync(ApplicationUser.UserName);
             var existingKeys = new List<PublicKeyCredentialDescriptor>();
-            foreach (var publicKeyCredentialDescriptor in items)
+            if (identityUser.UserName != null)
             {
-                if (publicKeyCredentialDescriptor.Descriptor != null)
-                    existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                var items = await _fido2Store.GetCredentialsByUserNameAsync(identityUser.UserName);
+                foreach (var publicKeyCredentialDescriptor in items)
+                {
+                    if (publicKeyCredentialDescriptor.Descriptor != null)
+                        existingKeys.Add(publicKeyCredentialDescriptor.Descriptor);
+                }
             }
 
             // 3. Create options
@@ -136,7 +138,8 @@ public class MfaFido2RegisterController : Controller
                     UserHandle = success.Result.User.Id,
                     SignatureCounter = success.Result.Counter,
                     CredType = success.Result.CredType,
-                    RegDate = DateTime.Now,
+                    RegDate = DateTimeOffset.UtcNow,
+                    //AaGuid = success.Result.AaGuid // version 4
                     AaGuid = success.Result.Aaguid
                 });
             }

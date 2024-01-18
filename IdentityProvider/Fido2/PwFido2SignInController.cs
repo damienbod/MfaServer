@@ -56,6 +56,8 @@ public class PwFido2SignInController : Controller
             if (!string.IsNullOrEmpty(username))
             {
                 var ApplicationUser = await _userManager.FindByNameAsync(username);
+                if (identityUser == null) throw new ArgumentException("Username not found");
+
                 var user = new Fido2User
                 {
                     DisplayName = ApplicationUser.UserName,

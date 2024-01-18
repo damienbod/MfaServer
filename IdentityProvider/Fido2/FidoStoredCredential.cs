@@ -12,7 +12,6 @@ public class FidoStoredCredential
     /// <summary>
     /// Gets or sets the primary key for this user.
     /// </summary>
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public virtual int Id { get; set; }
 
     /// <summary>
@@ -39,7 +38,7 @@ public class FidoStoredCredential
     /// <summary>
     /// Gets or sets the registration date for this user.
     /// </summary>
-    public virtual DateTime RegDate { get; set; }
+    public virtual DateTimeOffset RegDate { get; set; }
 
     /// <summary>
     /// Gets or sets the Authenticator Attestation GUID (AAGUID) for this user.
