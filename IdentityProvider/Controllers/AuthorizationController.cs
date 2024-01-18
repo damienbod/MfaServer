@@ -33,8 +33,10 @@ public class AuthorizationController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IdTokenHintValidationConfiguration _idTokenHintValidationConfiguration;
+    private readonly bool _testingMode;
 
     public AuthorizationController(
+        IConfiguration configuration,
         IOpenIddictApplicationManager applicationManager,
         IOpenIddictAuthorizationManager authorizationManager,
         IOpenIddictScopeManager scopeManager,
@@ -48,6 +50,8 @@ public class AuthorizationController : Controller
         _signInManager = signInManager;
         _userManager = userManager;
         _idTokenHintValidationConfiguration = idTokenHintValidationConfiguration.Value;
+
+        _testingMode = configuration["TestMode"].Equals("true");
     }
 
     [HttpGet("~/connect/authorize")]
@@ -174,13 +178,11 @@ public class AuthorizationController : Controller
 
                 var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
-                var testingMode = true;
-
                 var idTokenHintValidationResult = ValidateIdTokenHintRequestPayload.ValidateTokenAndSignature(
                     request.IdTokenHint,
                     _idTokenHintValidationConfiguration,
                     wellKnownEndpoints.SigningKeys,
-                    testingMode);
+                    _testingMode);
 
                 var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
 

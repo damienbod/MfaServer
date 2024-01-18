@@ -9,4 +9,5 @@ public class IdTokenHintValidationConfiguration
     public string IdTokenAuthority { get; set; } = string.Empty;
     public string IdTokenAudience { get; set; } = string.Empty;
     public string ClientId { get; set; } = string.Empty;
+
 }
