@@ -13,6 +13,6 @@ public class CreateGraphAuthMethodModel : PageModel
 
     public async Task OnGetAsync()
     {
-        await _microsoftGraphClient.CreateAuthenticationMethod();
+        await _microsoftGraphClient.CreateAuthenticationMethodV2();
     }
 }
