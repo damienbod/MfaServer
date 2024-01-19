@@ -39,7 +39,7 @@ public static class ValidateIdTokenHintRequestPayload
         };
 
         // preferred_username from id_token_hint
-        var preferred_username = claimsIdTokenPrincipal.FindFirst("preferred_username").Value;
+        var preferred_username = GetPreferredUserName(claimsIdTokenPrincipal);
         if (!preferred_username!.ToLower().Equals(userName.ToLower()))
         {
             return (false, "preferred_username parameter has an incorrect value",
