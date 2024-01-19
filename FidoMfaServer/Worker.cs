@@ -1,5 +1,5 @@
-﻿using OpenIddict.Abstractions;
-using FidoMfaServer.Data;
+﻿using FidoMfaServer.Data;
+using OpenIddict.Abstractions;
 using System.Globalization;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -33,7 +33,7 @@ public class Worker : IHostedService
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "oidc-implicit-mfa-confidential", 
+                    ClientId = "oidc-implicit-mfa-confidential",
                     ConsentType = ConsentTypes.Implicit,
                     DisplayName = "OIDC Implicit Flow for MFA",
                     DisplayNames =

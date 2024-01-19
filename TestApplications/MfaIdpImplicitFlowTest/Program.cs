@@ -1,6 +1,6 @@
 ﻿using Azure.Identity;
-using Serilog;
 using MfaIdpImplicitFlowTest;
+using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

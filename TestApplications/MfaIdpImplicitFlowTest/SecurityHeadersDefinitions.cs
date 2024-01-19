@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace MfaIdpImplicitFlowTest;
+﻿namespace MfaIdpImplicitFlowTest;
 
 public static class SecurityHeadersDefinitions
 {

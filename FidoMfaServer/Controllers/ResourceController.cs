@@ -1,8 +1,8 @@
+using FidoMfaServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
-using FidoMfaServer.Data;
 
 namespace FidoMfaServer.Controllers;
 

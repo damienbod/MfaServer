@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using FidoMfaServer.Data;
+﻿using FidoMfaServer.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace Fido2Identity;
 

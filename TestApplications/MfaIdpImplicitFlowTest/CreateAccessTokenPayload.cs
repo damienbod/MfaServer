@@ -19,7 +19,7 @@ public static class CreateDelegatedAccessTokenPayload
         //}
 
         var subject = new ClaimsIdentity(new[] {
-            new Claim("ver", payload.Version),              
+            new Claim("ver", payload.Version),
             new Claim("iss", payload.Issuer),
             new Claim("sub", payload.Sub),
             new Claim("aud", payload.Audience),
@@ -34,7 +34,7 @@ public static class CreateDelegatedAccessTokenPayload
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
-        {       
+        {
             Subject = subject,
             Expires = DateTime.UtcNow.AddHours(1),
             IssuedAt = DateTime.UtcNow,

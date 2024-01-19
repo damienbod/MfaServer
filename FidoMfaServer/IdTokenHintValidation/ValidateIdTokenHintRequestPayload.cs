@@ -22,7 +22,7 @@ public static class ValidateIdTokenHintRequestPayload
     public static (bool Valid, string Reason, ClaimsPrincipal ClaimsPrincipal) ValidateTokenAndSignature(
         string jwtToken,
         IdTokenHintValidationConfiguration idTokenConfiguration,
-        ICollection<SecurityKey> signingKeys, 
+        ICollection<SecurityKey> signingKeys,
         bool testingMode)
     {
         try
@@ -41,7 +41,7 @@ public static class ValidateIdTokenHintRequestPayload
                 ValidAudience = idTokenConfiguration.IdTokenAudience
             };
 
-            if(testingMode)
+            if (testingMode)
             {
                 validationParameters.ValidateIssuerSigningKey = false;
             }

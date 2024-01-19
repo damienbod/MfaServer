@@ -4,25 +4,24 @@
  * the license and the contributors participating to this project.
  */
 
+using FidoMfaServer.Data;
+using FidoMfaServer.Helpers;
+using FidoMfaServer.ViewModels.Authorization;
+using IdentityProvider.IdTokenHintValidation;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using FidoMfaServer.Data;
-using FidoMfaServer.Helpers;
-using FidoMfaServer.ViewModels.Authorization;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using Microsoft.Extensions.Options;
-using IdentityProvider.IdTokenHintValidation;
-using System.Security.Cryptography;
 
 namespace FidoMfaServer.Controllers;
 

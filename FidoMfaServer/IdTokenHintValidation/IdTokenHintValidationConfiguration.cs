@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace IdentityProvider.IdTokenHintValidation;
+﻿namespace IdentityProvider.IdTokenHintValidation;
 
 public class IdTokenHintValidationConfiguration
 {

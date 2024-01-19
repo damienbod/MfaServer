@@ -1,9 +1,9 @@
 ﻿using Fido2NetLib;
 using Fido2NetLib.Objects;
+using FidoMfaServer.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using FidoMfaServer.Data;
 using System.Text;
 using static Fido2NetLib.Fido2;
 
@@ -44,12 +44,12 @@ public class PwFido2RegisterController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("/pwmakeCredentialOptions")]
-    public async Task<JsonResult> MakeCredentialOptions([FromForm] string username, 
+    public async Task<JsonResult> MakeCredentialOptions([FromForm] string username,
         [FromForm] string displayName,
-        [FromForm] string entraIdOid,       
-        [FromForm] string attType, 
-        [FromForm] string authType, 
-        [FromForm] bool requireResidentKey, 
+        [FromForm] string entraIdOid,
+        [FromForm] string attType,
+        [FromForm] string authType,
+        [FromForm] bool requireResidentKey,
         [FromForm] string userVerification)
     {
         try
@@ -165,11 +165,12 @@ public class PwFido2RegisterController : Controller
 
     private async Task<ApplicationUser> CreateOrFindUser(string userEmail, string entraIdOid)
     {
-        var user = new ApplicationUser { 
-            UserName = userEmail, 
-            Email = userEmail, 
-            EntraIdOid = entraIdOid,  
-            EmailConfirmed = true 
+        var user = new ApplicationUser
+        {
+            UserName = userEmail,
+            Email = userEmail,
+            EntraIdOid = entraIdOid,
+            EmailConfirmed = true
         };
 
         var find = await _userManager.FindByEmailAsync(userEmail);

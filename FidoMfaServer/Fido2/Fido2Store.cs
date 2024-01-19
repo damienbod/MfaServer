@@ -1,6 +1,6 @@
 using Fido2NetLib;
-using Microsoft.EntityFrameworkCore;
 using FidoMfaServer.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace Fido2Identity;

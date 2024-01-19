@@ -42,7 +42,7 @@ internal static class StartupExtensions
             options.UsePkce = false;
             options.GetClaimsFromUserInfoEndpoint = false;
             options.Scope.Add("email");
-      
+
             options.SaveTokens = true;
 
             options.Events = new OpenIdConnectEvents
@@ -70,8 +70,8 @@ internal static class StartupExtensions
             Sub = "mBfcvuhSHkDWVgV72x2ruIYdSsPSvcj2R0qfc6mGEAA",
             Audience = "600b719b-3766-4dc5-95a6-3c4a8dc31885",
             Name = "Damien tes",
-            PreferredUsername =  "testuser2@contoso.com",
-            Oid =  "951ddb04-b16d-45f3-bbf7-b0fa18fa7aee",
+            PreferredUsername = "testuser2@contoso.com",
+            Oid = "951ddb04-b16d-45f3-bbf7-b0fa18fa7aee",
             Tid = "14c2f153-90a7-4689-9db7-9543bf084dad",
 
             SigningCredentials = activeCertificate

@@ -1,9 +1,9 @@
 ﻿using Fido2NetLib;
 using Fido2NetLib.Objects;
+using FidoMfaServer.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using FidoMfaServer.Data;
 using System.Text;
 
 namespace Fido2Identity;

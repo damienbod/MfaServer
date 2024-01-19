@@ -1,9 +1,9 @@
 using Fido2Identity;
 using Fido2NetLib;
+using FidoMfaServer.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
-using FidoMfaServer.Data;
 using Quartz;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;

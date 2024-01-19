@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using MfaIdpImplicitFlowTest.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MfaIdpImplicitFlowTest.Models;
+using System.Diagnostics;
 
 namespace MfaIdpImplicitFlowTest.Controllers;
 

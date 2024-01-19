@@ -4,9 +4,9 @@
  * the license and the contributors participating to this project.
  */
 
+using FidoMfaServer.ViewModels.Shared;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using FidoMfaServer.ViewModels.Shared;
 
 namespace FidoMfaServer.Controllers;
 
