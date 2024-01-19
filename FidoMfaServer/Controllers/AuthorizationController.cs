@@ -190,6 +190,7 @@ public class AuthorizationController : Controller
                         "id_token_hint validation failed");
                 }
 
+                var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
                 var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
 
                 // TODO read claim from request claim

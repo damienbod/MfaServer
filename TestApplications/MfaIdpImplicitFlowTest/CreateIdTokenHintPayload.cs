@@ -41,7 +41,7 @@ public static class CreateIdTokenHintPayload
             Issuer = payload.Issuer,
             Audience = payload.Audience,
             SigningCredentials = signingCredentials,
-            TokenType = "jwt"
+            TokenType = "JWT"
         };
 
         tokenDescriptor.AdditionalHeaderClaims ??= new Dictionary<string, object>();
