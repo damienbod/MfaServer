@@ -184,6 +184,12 @@ public class AuthorizationController : Controller
                     wellKnownEndpoints.SigningKeys,
                     _testingMode);
 
+                if (!idTokenHintValidationResult.Valid)
+                {
+                    return UnauthorizedValidationParametersFailed(idTokenHintValidationResult.Reason,
+                        "id_token_hint validation failed");
+                }
+
                 var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
 
                 // TODO read claim from request claim

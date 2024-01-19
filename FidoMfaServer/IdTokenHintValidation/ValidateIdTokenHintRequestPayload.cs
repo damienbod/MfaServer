@@ -84,7 +84,7 @@ public static class ValidateIdTokenHintRequestPayload
         }
         catch (Exception ex)
         {
-            return (false, $"Access Token Authorization failed {ex.Message}", null);
+            return (false, $"Id Token Authorization failed {ex.Message}", null);
         }
     }
 
