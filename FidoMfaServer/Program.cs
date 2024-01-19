@@ -13,7 +13,7 @@ try
 
     builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
-        .WriteTo.File("../_logs-IdentityProvider.txt")
+        .WriteTo.File("../_logs-FidoMfaServer.txt")
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(context.Configuration));
 
