@@ -48,7 +48,7 @@ public class Worker : IHostedService
                     {
                         new Uri("https://localhost:5001/signin-oidc")
                     },
-                    ClientSecret = "oidc-id_token-confidential_secret",
+                    //ClientSecret = "oidc-id_token-confidential_secret",
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
