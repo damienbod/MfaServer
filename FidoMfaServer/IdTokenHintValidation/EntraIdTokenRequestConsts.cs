@@ -1,4 +1,4 @@
-﻿namespace IdentityProvider.IdTokenHintValidation;
+﻿namespace FidoMfaServer.IdTokenHintValidation;
 
 public class EntraIdTokenRequestConsts
 {

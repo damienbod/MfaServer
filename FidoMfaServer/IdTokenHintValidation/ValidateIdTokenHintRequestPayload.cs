@@ -3,16 +3,46 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Security.Claims;
 
-namespace IdentityProvider.IdTokenHintValidation;
+namespace FidoMfaServer.IdTokenHintValidation;
 
 public static class ValidateIdTokenHintRequestPayload
 {
-    public static (bool Valid, string Reason, string Error) IsValid(ClaimsPrincipal claimsIdTokenPrincipal, IdTokenHintValidationConfiguration configuration)
-    {
+    public static (bool Valid, string Reason, string Error) IsValid(ClaimsPrincipal claimsIdTokenPrincipal, 
+        IdTokenHintValidationConfiguration configuration, 
+        string userEntraIdOid, 
+        string userName)
+    { 
+        //_idTokenHintValidationConfiguration.ClientId == request.ClientId;
+
+        // oid from id_token_hint must match User OID
+        var oid = claimsIdTokenPrincipal.FindFirst("oid").Value;
+        if (!oid!.Equals(userEntraIdOid))
+        {
+            return (false, "oid parameter has an incorrect value",
+                EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
+        };
+
+        // aud must match allowed audience
         var aud = claimsIdTokenPrincipal.FindFirst("aud").Value;
-        if (!aud!.Equals(configuration.IdTokenAudience))
+        if (!aud!.Equals(configuration.Audience))
         {
             return (false, "client_id parameter has an incorrect value",
+                EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
+        };
+
+        // tid must match allowed tenant
+        var tid = claimsIdTokenPrincipal.FindFirst("tid").Value;
+        if (!tid!.Equals(configuration.TenantId))
+        {
+            return (false, "tid parameter has an incorrect value",
+                EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
+        };
+
+        // preferred_username from id_token_hint
+        var preferred_username = claimsIdTokenPrincipal.FindFirst("preferred_username").Value;
+        if (!preferred_username!.ToLower().Equals(userName.ToLower()))
+        {
+            return (false, "preferred_username parameter has an incorrect value",
                 EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
         };
 
@@ -36,9 +66,9 @@ public static class ValidateIdTokenHintRequestPayload
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKeys = signingKeys,
                 ValidateIssuer = true,
-                ValidIssuer = idTokenConfiguration.IdTokenAuthority,
+                ValidIssuer = idTokenConfiguration.Issuer,
                 ValidateAudience = true,
-                ValidAudience = idTokenConfiguration.IdTokenAudience
+                ValidAudience = idTokenConfiguration.Audience
             };
 
             if (testingMode)

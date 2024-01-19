@@ -6,8 +6,8 @@
 
 using FidoMfaServer.Data;
 using FidoMfaServer.Helpers;
+using FidoMfaServer.IdTokenHintValidation;
 using FidoMfaServer.ViewModels.Authorization;
-using IdentityProvider.IdTokenHintValidation;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -173,7 +173,7 @@ public class AuthorizationController : Controller
 
                 //get well known endpoints and validate access token sent in the assertion
                 var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                    _idTokenHintValidationConfiguration.IdTokenHintMetadataAddress,
+                    _idTokenHintValidationConfiguration.MetadataAddress,
                     new OpenIdConnectConfigurationRetriever());
 
                 var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
@@ -199,13 +199,16 @@ public class AuthorizationController : Controller
                     claim.SetDestinations(GetDestinations(claim, principal));
                 }
 
-                // TODO Add validation
-                var entraIdOid = user.EntraIdOid;
-                // oid from id_token_hint must match User OID
-                // preferred_username from id_token_hint
-                // tid must match allowed tenant
-                // aud must match allowed audience
-                //_idTokenHintValidationConfiguration.ClientId == request.ClientId;
+                var (Valid, Reason, Error) = ValidateIdTokenHintRequestPayload
+                    .IsValid(idTokenHintValidationResult.ClaimsPrincipal, 
+                    _idTokenHintValidationConfiguration,
+                    user.EntraIdOid,
+                    user.UserName);
+
+                if (!Valid)
+                {
+                    return UnauthorizedValidationParametersFailed(Reason, Error);
+                }
 
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
@@ -480,5 +483,19 @@ public class AuthorizationController : Controller
                 yield return Destinations.AccessToken;
                 yield break;
         }
+    }
+
+    private IActionResult UnauthorizedValidationParametersFailed(string Reason, string error)
+    {
+        var errorResult = new IdTokenExchangeErrorResponse
+        {
+            error = error,
+            error_description = Reason,
+            timestamp = DateTime.UtcNow,
+            correlation_id = Guid.NewGuid().ToString(),
+            trace_id = Guid.NewGuid().ToString(),
+        };
+
+        return Unauthorized(errorResult);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MfaIdpImplicitFlowTest;
 
-public class CreateDelegatedTestIdTokenPayloadModel
+public class CreateIdTokenHintPayloadModel
 {
     public string Version { get; set; } = "2.0";
     public string Sub { get; set; } = string.Empty;

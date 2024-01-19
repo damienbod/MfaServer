@@ -63,7 +63,7 @@ internal static class StartupExtensions
         var developmentCertificatePfx = Path.Combine(_env!.ContentRootPath, "sts_dev_cert.pfx");
         var activeCertificate = new X509Certificate2(developmentCertificatePfx, "1234");
 
-        var payload = new CreateDelegatedTestIdTokenPayloadModel
+        var payload = new CreateIdTokenHintPayloadModel
         {
             Version = "2.0",
             Issuer = "https://login.microsoftonline.com/9122040d-6c67-4c5b-b112-36a304b66dad/v2.0",
@@ -78,7 +78,7 @@ internal static class StartupExtensions
         };
 
         context.ProtocolMessage.IdTokenHint =
-            CreateDelegatedAccessTokenPayload.GenerateJwtTokenAsync(payload);
+            CreateIdTokenHintPayload.GenerateJwtTokenAsync(payload);
     }
 
     public static WebApplication Configure(this WebApplication app)

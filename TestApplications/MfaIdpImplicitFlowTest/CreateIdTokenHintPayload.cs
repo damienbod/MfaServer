@@ -4,9 +4,9 @@ using System.Security.Claims;
 
 namespace MfaIdpImplicitFlowTest;
 
-public static class CreateDelegatedAccessTokenPayload
+public static class CreateIdTokenHintPayload
 {
-    public static string GenerateJwtTokenAsync(CreateDelegatedTestIdTokenPayloadModel payload)
+    public static string GenerateJwtTokenAsync(CreateIdTokenHintPayloadModel payload)
     {
         SigningCredentials signingCredentials = new X509SigningCredentials(payload.SigningCredentials);
 

@@ -1,11 +1,10 @@
-﻿namespace IdentityProvider.IdTokenHintValidation;
+﻿namespace FidoMfaServer.IdTokenHintValidation;
 
 public class IdTokenHintValidationConfiguration
 {
-
-    public string IdTokenHintMetadataAddress { get; set; } = string.Empty;
-    public string IdTokenAuthority { get; set; } = string.Empty;
-    public string IdTokenAudience { get; set; } = string.Empty;
+    public string MetadataAddress { get; set; } = string.Empty;
+    public string Issuer { get; set; } = string.Empty;
+    public string Audience { get; set; } = string.Empty;
+    public string TenantId { get; set; } = string.Empty;
     public string ClientId { get; set; } = string.Empty;
-
 }
