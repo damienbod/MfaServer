@@ -198,7 +198,7 @@ public class AuthorizationController : Controller
                 {
                     principal.AddClaim("amr", "fido");
                     // must be read from the claims request
-                    principal.AddClaim("acr", "possessionorinherence");
+                    principal.AddClaim("acr", requestedClaims.id_token.acr.values.FirstOrDefault());
                 }
 
                 foreach (var claim in principal.Claims)
