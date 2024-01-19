@@ -21,7 +21,7 @@ public static class CreateClaimsIdTokenPayload
         //    }
         //}
 
-        return System.Text.Json.JsonSerializer.Serialize(new id_token());
+        return System.Text.Json.JsonSerializer.Serialize(new claims());
     }
 
     public class acr
@@ -37,7 +37,12 @@ public static class CreateClaimsIdTokenPayload
 
     public class id_token
     {
-        public acr acr { get; set; }
-        public acr amr { get; set; }
+        public acr acr { get; set; } = new acr();
+        public amr amr { get; set; } = new amr();
+    }
+
+    public class claims
+    {
+        public id_token id_token { get; set; } = new id_token();
     }
 }
