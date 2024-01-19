@@ -14,9 +14,9 @@ public class CreateGraphAuthMethodModel : PageModel
     public async Task OnGetAsync()
     {
         // Using Graph SDK
-        //await _microsoftGraphClient.CreateAuthenticationMethod();
+        await _microsoftGraphClient.CreateAuthenticationMethod();
 
         // Using HTTP
-        await _microsoftGraphClient.CreateAuthenticationMethodV2();
+        //await _microsoftGraphClient.CreateAuthenticationMethodV2();
     }
 }
