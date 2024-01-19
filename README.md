@@ -31,8 +31,6 @@ Update the app.settings to deploy
   "TestMode": "false",
 ```
 
-
-
 ## MFA Test UI
 
 ```csharp
