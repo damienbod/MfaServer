@@ -74,6 +74,9 @@ public static class ValidateIdTokenHintRequestPayload
             if (testingMode)
             {
                 validationParameters.ValidateIssuerSigningKey = false;
+                validationParameters.ValidateIssuer = false;
+                validationParameters.ValidateAudience = false;
+                validationParameters.ValidateLifetime = false;
             }
 
             ISecurityTokenValidator tokenValidator = new JwtSecurityTokenHandler();

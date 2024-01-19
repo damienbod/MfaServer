@@ -3,4 +3,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<p>Implicit flow</p>
+<p>Implicit flow MFA server tester</p>
+
+<p>context.ProtocolMessage.IdTokenHint => add a valid Microsoft Entra ID id_token</p>
+
+<textarea>
+    .AddMicrosoftIdentityWebApp(options =>
+    {
+        builder.Configuration.Bind("AzureAd", options);
+        options.UsePkce = true;
+        options.Events = new OpenIdConnectEvents();
+
+        options.Events.OnTokenResponseReceived = async context =>
+        {
+            var idToken = context.TokenEndpointResponse.IdToken;
+        };
+    },
+</textarea>
