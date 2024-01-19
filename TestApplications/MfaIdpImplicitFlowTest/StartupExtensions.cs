@@ -60,26 +60,8 @@ internal static class StartupExtensions
 
     private static async Task OnRedirectToIdentityProvider(RedirectContext context)
     {
-        var developmentCertificatePfx = Path.Combine(_env!.ContentRootPath, "sts_dev_cert.pfx");
-        var activeCertificate = new X509Certificate2(developmentCertificatePfx, "1234");
-
-        var payload = new CreateIdTokenHintPayloadModel
-        {
-            Version = "2.0",
-            Issuer = "https://login.microsoftonline.com/9122040d-6c67-4c5b-b112-36a304b66dad/v2.0",
-            Sub = "mBfcvuhSHkDWVgV72x2ruIYdSsPSvcj2R0qfc6mGEAA",
-            Audience = "600b719b-3766-4dc5-95a6-3c4a8dc31885",
-            Name = "Damien tes",
-            PreferredUsername = "testuser2@contoso.com",
-            Oid = "951ddb04-b16d-45f3-bbf7-b0fa18fa7aee",
-            Tid = "14c2f153-90a7-4689-9db7-9543bf084dad",
-
-            SigningCredentials = activeCertificate
-        };
-
-        context.ProtocolMessage.IdTokenHint =
-            CreateIdTokenHintPayload.GenerateJwtTokenAsync(payload);
-
+        context.ProtocolMessage.IdTokenHint = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjVCM25SeHRRN2ppOGVORGMzRnkwNUtmOTdaRSJ9.eyJhdWQiOiI1YzIwMWI2MC04OWY2LTQ3ZDgtYjJlZi05ZDlmZTJhNDI3NTEiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vN2ZmOTViMTUtZGMyMS00YmE2LWJjOTItODI0ODU2NTc4ZmMxL3YyLjAiLCJpYXQiOjE3MDU2NTg0MDIsIm5iZiI6MTcwNTY1ODQwMiwiZXhwIjoxNzA1NjYyMzAyLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9hNmJiYWI5Mi0wNTNlLTQ5MGItYmQ3ZS01Y2QwMzc2M2I3NDYvIiwibmFtZSI6IkRhbWllbiBCb3dkZW4iLCJub25jZSI6IjYzODQxMjU1NDk3NzkyNTYwOS5OVFE0WldGaU1HTXROREk0T1MwMFkyRTFMV0ppTldZdE5HSmhZV1JoTXpabFl6UTVOVFEwTjJZNU1EY3RaR00wWlMwME5tUTFMVGs0WmpjdFl6ZzRNamRsTXpVM05EWmwiLCJvaWQiOiI2OGI2MjU5Ny0wODllLTRjODAtODA0OC0yNjI5ZjE5NGY4MzAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJkYW1pZW4uYm93ZGVuQGlzb2x1dGlvbnMuY2giLCJyaCI6IjAuQVI4QUZWdjVmeUhjcGt1OGtvSklWbGVQd1dBYklGejJpZGhIc3UtZG4tS2tKMUdGQUNBLiIsInN1YiI6Ii1fRUQyLXlWRUZuYkpyZXVDOTNOLWU1V3hJVjlkQjhNMElpc3VZZElYcG8iLCJ0aWQiOiI3ZmY5NWIxNS1kYzIxLTRiYTYtYmM5Mi04MjQ4NTY1NzhmYzEiLCJ1dGkiOiJwQ0tqeWRGX19FaXN1MHZzVHMwVUFBIiwidmVyIjoiMi4wIn0.0szeyBecPJnJa43cU9W5R7dr5YSWOyW9B9FHtWNfnOkJ7XPh3a1ZEklUsvyEYavmkxBRrwwOsBtfyytlqEm6Gg0rtvwEJE4D5U-MxeNggeDJrVfQAzjJ0dOLx0IoNfPr12BhYf7lc-NiiVDiyk7UtnOQZ-cNj9aolc7SQG5uV68oc8JHZng8LbTEASlIGAMh5aqbqRyH-kXxpIbO3OeKWM3AZIyuYRf0IwDTn1CjfJv-4ILX122HZUPci_Fvuf7ZC1H4BwDAvrdkUHW714YdY92aa-PaStU32l5NpKt8A2dR9dPVH4IKt_PJL1DaZeYRntsAanC_q7LKZzrev_VvpQ";
+    
         context.ProtocolMessage.Parameters
             .Add("claims", CreateClaimsIdTokenPayload.GenerateClaims());
     }
