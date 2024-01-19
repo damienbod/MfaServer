@@ -40,19 +40,21 @@ public class MicrosoftGraphClient
     /// </summary>
     public async Task<AuthenticationMethodConfiguration?> CreateAuthenticationMethod()
     {
+        var oidcSetting = System.Text.Json.JsonSerializer.Serialize(new openIdConnectSetting());
         var additionalData = new Dictionary<string, object>
         {
             { "displayName", "FIDO2-passkeys-MFA-b8dcfa58960c.ngrok.app" },
             { "appId", "c5684f52-769e-471a-b7b5-9b9a94af97d4" },
-            { "openIdConnectSetting", System.Text.Json.JsonSerializer.Serialize(new openIdConnectSetting()) }
+            { "openIdConnectSetting", oidcSetting }
         };
-        var user = await _graphServiceClient.AuthenticationMethodsPolicy
+        var created = await _graphServiceClient.AuthenticationMethodsPolicy
             .AuthenticationMethodConfigurations.PostAsync(new AuthenticationMethodConfiguration
             {
-                AdditionalData = additionalData
+                AdditionalData = additionalData, 
+                OdataType = "#microsoft.graph.externalAuthenticationMethodConfiguration",
             }, b => b.Options.WithScopes("Policy.ReadWrite.AuthenticationMethod"));
 
-        return user;
+        return created;
     }
 
     /// <summary>
