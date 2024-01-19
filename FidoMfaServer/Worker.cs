@@ -46,7 +46,10 @@ public class Worker : IHostedService
                     },
                     RedirectUris =
                     {
-                        new Uri("https://localhost:5001/signin-oidc")
+                        new Uri("https://localhost:5001/signin-oidc"),
+                        new Uri("https://b8dcfa58960c.ngrok.app/signin-oidc"),
+                        new Uri("https://login.microsoftonline.com/common/federation/externalauthprovider")
+
                     },
                     //ClientSecret = "oidc-id_token-confidential_secret",
                     Permissions =
