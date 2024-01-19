@@ -22,7 +22,7 @@ public static class CreateIdTokenHintPayload
             new Claim("ver", payload.Version),
             new Claim("iss", payload.Issuer),
             new Claim("sub", payload.Sub),
-            new Claim("aud", payload.Audience),
+            //new Claim("aud", payload.Audience),
             new Claim("name", payload.Name),
             new Claim("preferred_username", payload.PreferredUsername),
             new Claim("oid", payload.Oid),

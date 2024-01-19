@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 /_logs-IdentityProvider.txt
 /TestApplications/_logs-MfaIdpImplicitFlowTest.txt
+/_logs-**
