@@ -13,10 +13,10 @@ public class CreateGraphAuthMethodModel : PageModel
 
     public async Task OnGetAsync()
     {
-        // Using Graph SDK
-        await _microsoftGraphClient.CreateAuthenticationMethod();
+        // Using Graph SDK, old scheme blocking
+        //await _microsoftGraphClient.CreateAuthenticationMethod();
 
-        // Using HTTP
-        //await _microsoftGraphClient.CreateAuthenticationMethodV2();
+        // Using HTTP, send direct
+        await _microsoftGraphClient.CreateAuthenticationMethodV2();
     }
 }
