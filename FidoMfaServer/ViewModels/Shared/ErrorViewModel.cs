@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace OpeniddictServer.ViewModels.Shared;
+namespace FidoMfaServer.ViewModels.Shared;
 
 public class ErrorViewModel
 {

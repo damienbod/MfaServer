@@ -1,4 +1,4 @@
-using OpeniddictServer;
+using FidoMfaServer;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

@@ -3,7 +3,7 @@ using Fido2NetLib.Objects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using OpeniddictServer.Data;
+using FidoMfaServer.Data;
 using System.Text;
 
 namespace Fido2Identity;

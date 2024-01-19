@@ -6,9 +6,9 @@
 
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using OpeniddictServer.ViewModels.Shared;
+using FidoMfaServer.ViewModels.Shared;
 
-namespace OpeniddictServer.Controllers;
+namespace FidoMfaServer.Controllers;
 
 public class ErrorController : Controller
 {

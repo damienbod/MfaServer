@@ -1,9 +1,9 @@
 ﻿using OpenIddict.Abstractions;
-using OpeniddictServer.Data;
+using FidoMfaServer.Data;
 using System.Globalization;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace OpeniddictServer;
+namespace FidoMfaServer;
 
 public class Worker : IHostedService
 {

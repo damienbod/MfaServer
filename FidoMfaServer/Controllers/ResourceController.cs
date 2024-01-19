@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;
-using OpeniddictServer.Data;
+using FidoMfaServer.Data;
 
-namespace OpeniddictServer.Controllers;
+namespace FidoMfaServer.Controllers;
 
 [Route("api")]
 public class ResourceController : Controller

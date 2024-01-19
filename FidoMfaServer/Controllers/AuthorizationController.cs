@@ -15,16 +15,16 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using OpeniddictServer.Data;
-using OpeniddictServer.Helpers;
-using OpeniddictServer.ViewModels.Authorization;
+using FidoMfaServer.Data;
+using FidoMfaServer.Helpers;
+using FidoMfaServer.ViewModels.Authorization;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using Microsoft.Extensions.Options;
 using IdentityProvider.IdTokenHintValidation;
 using System.Security.Cryptography;
 
-namespace OpeniddictServer.Controllers;
+namespace FidoMfaServer.Controllers;
 
 public class AuthorizationController : Controller
 {

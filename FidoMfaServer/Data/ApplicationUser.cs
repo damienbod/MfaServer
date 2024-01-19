@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace OpeniddictServer.Data;
+namespace FidoMfaServer.Data;
 
 public class ApplicationUser : IdentityUser 
 { 

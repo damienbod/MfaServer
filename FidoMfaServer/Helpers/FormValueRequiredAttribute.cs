@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
-namespace OpeniddictServer.Helpers;
+namespace FidoMfaServer.Helpers;
 
 public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
 {

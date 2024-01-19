@@ -3,13 +3,13 @@ using Fido2NetLib;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
-using OpeniddictServer.Data;
+using FidoMfaServer.Data;
 using Quartz;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace OpeniddictServer;
+namespace FidoMfaServer;
 
 internal static class StartupExtensions
 {

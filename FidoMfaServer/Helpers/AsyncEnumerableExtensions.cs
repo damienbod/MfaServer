@@ -1,4 +1,4 @@
-namespace OpeniddictServer.Helpers;
+namespace FidoMfaServer.Helpers;
 
 public static class AsyncEnumerableExtensions
 {
