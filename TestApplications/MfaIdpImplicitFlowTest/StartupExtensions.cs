@@ -79,6 +79,9 @@ internal static class StartupExtensions
 
         context.ProtocolMessage.IdTokenHint =
             CreateIdTokenHintPayload.GenerateJwtTokenAsync(payload);
+
+        context.ProtocolMessage.Parameters
+            .Add("claims", CreateClaimsIdTokenPayload.GenerateClaims());
     }
 
     public static WebApplication Configure(this WebApplication app)

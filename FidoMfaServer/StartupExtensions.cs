@@ -1,6 +1,7 @@
 using Fido2Identity;
 using Fido2NetLib;
 using FidoMfaServer.Data;
+using FidoMfaServer.IdTokenHintValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
@@ -19,6 +20,8 @@ internal static class StartupExtensions
         var services = builder.Services;
         var configuration = builder.Configuration;
         _env = builder.Environment;
+
+        services.Configure<IdTokenHintValidationConfiguration>(configuration.GetSection("IdTokenHintValidationConfiguration"));
 
         services.AddControllersWithViews();
         services.AddRazorPages();
