@@ -82,6 +82,7 @@ public class MicrosoftGraphClient
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            var json = System.Text.Json.JsonSerializer.Serialize(new CreateAuthenticationMethodMethod());
             var response = await client.PostAsJsonAsync("https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations",
                 new CreateAuthenticationMethodMethod());
 
