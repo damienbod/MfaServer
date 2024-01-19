@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
-using System.Security.Cryptography.X509Certificates;
 
 namespace MfaIdpImplicitFlowTest;
 

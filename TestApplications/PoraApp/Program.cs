@@ -11,6 +11,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddOptions();
 
+        builder.Services.AddScoped<MicrosoftGraphClient>();
+
         builder.Services.AddDistributedMemoryCache();
 
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
@@ -27,6 +29,8 @@ public class Program
                 };
             })
             .EnableTokenAcquisitionToCallDownstreamApi()
+            .AddMicrosoftGraph(graphBaseUrl: "https://graph.microsoft.com/beta", new List<string> { 
+                "Policy.ReadWrite.AuthenticationMethod" })
             .AddDistributedTokenCaches();
 
         builder.Services.AddAuthorization(options =>
