@@ -68,7 +68,7 @@ public static class ValidateIdTokenHintRequestPayload
                 IssuerSigningKeys = signingKeys,
                 ValidateIssuer = true,
                 ValidIssuer = idTokenConfiguration.Issuer,
-                ValidateAudience = true,
+                ValidateAudience = idTokenConfiguration.ValidateAudience,
                 ValidAudience = idTokenConfiguration.Audience
             };
 
@@ -76,7 +76,7 @@ public static class ValidateIdTokenHintRequestPayload
             {
                 //validationParameters.ValidateIssuerSigningKey = false;
                 //validationParameters.ValidateIssuer = false;
-                //validationParameters.ValidateAudience = false;
+                validationParameters.ValidateAudience = idTokenConfiguration.ValidateAudience;
                 validationParameters.ValidateLifetime = false;
             }
 
