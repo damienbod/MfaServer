@@ -76,6 +76,7 @@ public class CreateAuthenticationMethodMethod
     public string displayName { get; set; } = "FIDO2-passkeys-MFA-b8dcfa58960c.ngrok.app";
     public string appId { get; set; } = "c5684f52-769e-471a-b7b5-9b9a94af97d4";
     public openIdConnectSetting openIdConnectSetting { get; set; } = new openIdConnectSetting();
+    public includeTarget includeTarget { get; set; } = new includeTarget(); 
 }
 
 public class openIdConnectSetting
@@ -83,3 +84,10 @@ public class openIdConnectSetting
     public string clientId { get; set; } = "oidc-implicit-mfa-confidential";
     public string discoveryUrl { get; set; } = "https://b8dcfa58960c.ngrok.app/.well-known/openid-configuration";
 }
+
+public class includeTarget
+{
+    public string clientId { get; set; } = "group";
+    public string id { get; set; } = "all_users";
+}
+
