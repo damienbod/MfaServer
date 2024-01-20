@@ -86,4 +86,6 @@ private static async Task OnRedirectToIdentityProvider(RedirectContext context)
 
 ## Links
 
+https://documentation.openiddict.com/
+
 https://mysignins.microsoft.com/
