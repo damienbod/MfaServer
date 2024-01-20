@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace PoraApp;
+namespace MerillApp;
 
 public class MicrosoftGraphClient
 {

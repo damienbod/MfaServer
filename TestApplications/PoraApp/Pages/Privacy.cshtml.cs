@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace PoraApp.Pages;
+namespace MerillApp.Pages;
 
 public class PrivacyModel : PageModel
 {
