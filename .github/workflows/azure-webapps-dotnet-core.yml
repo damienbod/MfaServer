@@ -1,5 +1,5 @@
 
-name: Build and deploy ASP.Net Core app to an Azure Web App
+name: Deploy app to Entra ID Web App
 
 env:
   AZURE_WEBAPP_NAME: fidomfaserver
