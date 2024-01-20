@@ -18,8 +18,10 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -191,20 +193,23 @@ public class AuthorizationController : Controller
                 }
 
                 var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
-                
-                principal.AddClaim("amr", "fido");
-                // must be read from the claims request
+
                 principal.AddClaim("acr", "possessionorinherence");
- 
                 var sub = idTokenHintValidationResult.ClaimsPrincipal
                     .Claims.First(d => d.Type == "sub");
 
                 principal.RemoveClaims("sub");
                 principal.AddClaim(sub.Type, sub.Value);
 
-                foreach (var claim in principal.Claims)
+                var claims = principal.Claims.ToList();
+                claims.Add(new Claim("amr", "[\"fido\"]", JsonClaimValueTypes.JsonArray));
+
+                ClaimsPrincipal cp = new();
+                cp.AddIdentity(new ClaimsIdentity(claims, principal.Identity.AuthenticationType));
+
+                foreach (var claim in cp.Claims)
                 {
-                    claim.SetDestinations(GetDestinations(claim, principal));
+                    claim.SetDestinations(GetDestinations(claim, cp));
                 }
 
                 var (Valid, Reason, Error) = ValidateIdTokenHintRequestPayload
@@ -218,7 +223,7 @@ public class AuthorizationController : Controller
                     return UnauthorizedValidationParametersFailed(Reason, Error);
                 }
 
-                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                return SignIn(cp, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
             // At this point, no authorization was found in the database and an error must be returned
             // if the client application specified prompt=none in the authorization request.
