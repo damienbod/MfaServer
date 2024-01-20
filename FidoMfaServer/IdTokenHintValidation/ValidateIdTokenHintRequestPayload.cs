@@ -76,7 +76,6 @@ public static class ValidateIdTokenHintRequestPayload
             {
                 //validationParameters.ValidateIssuerSigningKey = false;
                 //validationParameters.ValidateIssuer = false;
-                validationParameters.ValidateAudience = idTokenConfiguration.ValidateAudience;
                 validationParameters.ValidateLifetime = false;
             }
 
