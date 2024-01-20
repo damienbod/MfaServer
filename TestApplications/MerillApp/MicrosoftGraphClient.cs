@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Graph;
-using Microsoft.Graph.Models;
+﻿using Microsoft.Graph.Beta.Models;
 using Microsoft.Identity.Web;
 using System.Net.Http.Headers;
-using System.Text;
+using System.Net.Sockets;
 using System.Text.Json.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MerillApp;
 
@@ -73,7 +72,8 @@ public class CreateAuthenticationMethodMethod
 {
     [JsonPropertyName("@odata.type")]
     public string OdataType { get; set; } = "#microsoft.graph.externalAuthenticationMethodConfiguration";
-    public string displayName { get; set; } = "FIDO2-passkeys-MFA-b8dcfa58960c.ngrok.app";
+    public string displayName { get; set; } = "FIDO2-passkeys-MFA";
+    public string state { get; set; } = "enabled";
     public string appId { get; set; } = "c5684f52-769e-471a-b7b5-9b9a94af97d4";
     public openIdConnectSetting openIdConnectSetting { get; set; } = new openIdConnectSetting();
     public includeTarget includeTarget { get; set; } = new includeTarget(); 
@@ -82,7 +82,7 @@ public class CreateAuthenticationMethodMethod
 public class openIdConnectSetting
 {
     public string clientId { get; set; } = "oidc-implicit-mfa-confidential";
-    public string discoveryUrl { get; set; } = "https://b8dcfa58960c.ngrok.app/.well-known/openid-configuration";
+    public string discoveryUrl { get; set; } = "https://fidomfaserver.azurewebsites.net/.well-known/openid-configuration";
 }
 
 public class includeTarget
