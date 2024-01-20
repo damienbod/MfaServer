@@ -39,9 +39,9 @@ POST
 
 https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations
 
-Or PATCH
+Or PATCH 
 
-https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/97f65a33-345c-46f5-9ce2-7b7918c9698e
+https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/7e3543fd-2045-459b-afa6-4a542d349c07
 
 ```
 {
@@ -94,3 +94,5 @@ private static async Task OnRedirectToIdentityProvider(RedirectContext context)
 https://documentation.openiddict.com/
 
 https://mysignins.microsoft.com/
+
+https://developer.microsoft.com/en-us/graph/graph-explorer
