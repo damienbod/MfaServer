@@ -12,8 +12,6 @@ public static class ValidateIdTokenHintRequestPayload
         string userEntraIdOid, 
         string userName)
     { 
-        //_idTokenHintValidationConfiguration.ClientId == request.ClientId;
-
         // oid from id_token_hint must match User OID
         var oid = claimsIdTokenPrincipal.FindFirst("oid").Value;
         if (!oid!.Equals(userEntraIdOid))
@@ -22,13 +20,16 @@ public static class ValidateIdTokenHintRequestPayload
                 EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
         };
 
-        // aud must match allowed audience
-        var aud = claimsIdTokenPrincipal.FindFirst("aud").Value;
-        if (!aud!.Equals(configuration.Audience))
+        // aud must match allowed audience if for a specifc app
+        if(configuration.ValidateAudience)
         {
-            return (false, "client_id parameter has an incorrect value",
-                EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
-        };
+            var aud = claimsIdTokenPrincipal.FindFirst("aud").Value;
+            if (!aud!.Equals(configuration.Audience))
+            {
+                return (false, "client_id parameter has an incorrect value",
+                    EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
+            };
+        }    
 
         // tid must match allowed tenant
         var tid = claimsIdTokenPrincipal.FindFirst("tid").Value;
