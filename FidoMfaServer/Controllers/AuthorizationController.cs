@@ -194,7 +194,8 @@ public class AuthorizationController : Controller
 
                 var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
 
-                principal.AddClaim("acr", "possessionorinherence");
+                //principal.AddClaim("acr", "possessionorinherence");
+                principal.AddClaim("acr", "fido");
                 var sub = idTokenHintValidationResult.ClaimsPrincipal
                     .Claims.First(d => d.Type == "sub");
 
