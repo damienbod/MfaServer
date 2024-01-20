@@ -1,5 +1,7 @@
 # MFA Server
 
+[![.NET](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml)
+
 ## Database
 
 ```
