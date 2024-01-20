@@ -39,6 +39,10 @@ POST
 
 https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations
 
+Or PATCH
+
+https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/97f65a33-345c-46f5-9ce2-7b7918c9698e
+
 ```
 {
     "@odata.type": "#microsoft.graph.externalAuthenticationMethodConfiguration",

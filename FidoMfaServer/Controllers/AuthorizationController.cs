@@ -191,15 +191,16 @@ public class AuthorizationController : Controller
                 }
 
                 var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
-                var amrClaim = User.Claims.FirstOrDefault(t => t.Type == "amr");
+                
+                principal.AddClaim("amr", "fido");
+                // must be read from the claims request
+                principal.AddClaim("acr", "possessionorinherence");
+ 
+                var sub = idTokenHintValidationResult.ClaimsPrincipal
+                    .Claims.First(d => d.Type == "sub");
 
-                // TODO read claim from request claim
-                if (amrClaim != null && amrClaim.Value == "mfa") // need to fix to FIDO
-                {
-                    principal.AddClaim("amr", "fido");
-                    // must be read from the claims request
-                    principal.AddClaim("acr", requestedClaims.id_token.acr.values.FirstOrDefault());
-                }
+                principal.RemoveClaims("sub");
+                principal.AddClaim(sub.Type, sub.Value);
 
                 foreach (var claim in principal.Claims)
                 {
