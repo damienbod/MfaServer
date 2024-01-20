@@ -33,7 +33,7 @@ Update the app.settings to deploy
   "TestMode": "false",
 ```
 
-## Graph API
+## Microsoft Graph 
 
 POST 
 
@@ -42,11 +42,11 @@ https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authentica
 ```
 {
     "@odata.type": "#microsoft.graph.externalAuthenticationMethodConfiguration",
-    "displayName": "FIDO2-passkeys-MFA-b8dcfa58960c.ngrok.app",
+    "displayName": "FIDO2-passkeys-MFA",
     "appId": "4fabcfc0-5c44-45a1-8c80-8537f0625949", // remove external authentication app registration
     "openIdConnectSetting": {
-        "clientId": "oidc-client_id-from-mfa-server",
-        "discoveryUrl": "https://b8dcfa58960c.ngrok.app/.well-known/openid-configuration"
+        "clientId": "oidc-implicit-mfa-confidential",
+        "discoveryUrl": "https://fidomfaserver.azurewebsites.net//.well-known/openid-configuration"
     },
     "includeTarget": { // switch this if only specific users are required
         "targetType": "group",
