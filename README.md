@@ -80,3 +80,8 @@ private static async Task OnRedirectToIdentityProvider(RedirectContext context)
         .Add("claims", CreateClaimsIdTokenPayload.GenerateClaims());
 }
 ```
+
+
+## Links
+
+https://mysignins.microsoft.com/
