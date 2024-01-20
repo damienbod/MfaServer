@@ -36,7 +36,6 @@ internal static class StartupExtensions
             options.Authority = mfaProvider;
             options.RequireHttpsMetadata = true;
             options.ClientId = "oidc-implicit-mfa-confidential";
-            options.ClientSecret = "oidc-id_token-confidential_secret";
             options.ResponseType = "id_token";
             options.UsePkce = false;
             options.GetClaimsFromUserInfoEndpoint = false;
