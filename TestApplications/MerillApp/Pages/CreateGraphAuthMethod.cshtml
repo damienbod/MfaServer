@@ -6,4 +6,35 @@
 
 <div class="text-center">
     <h1 class="display-4">Create</h1>
-    </div>
+
+    <form method="post">
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateAuthenticationMethodModel.DisplayName, new { @class = "sr-only", @for = "txtDisplayName" })
+            @Html.TextBoxFor(model => model.CreateAuthenticationMethodModel.DisplayName, new { @class = "form-control",  @id = "txtDisplayName" })
+            @Html.ValidationMessageFor(model => model.CreateAuthenticationMethodModel.DisplayName)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateAuthenticationMethodModel.AppRegistrationId, new { @class = "sr-only", @for = "txtAppRegistrationId" })
+            @Html.TextBoxFor(model => model.CreateAuthenticationMethodModel.AppRegistrationId, new { @class = "form-control", @id = "txtAppRegistrationId" })
+            @Html.ValidationMessageFor(model => model.CreateAuthenticationMethodModel.AppRegistrationId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateAuthenticationMethodModel.ClientId, new { @class = "sr-only", @for = "txtClientId" })
+            @Html.TextBoxFor(model => model.CreateAuthenticationMethodModel.ClientId, new { @class = "form-control", @id = "txtClientId" })
+            @Html.ValidationMessageFor(model => model.CreateAuthenticationMethodModel.ClientId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateAuthenticationMethodModel.DiscoveryUrl, new { @class = "sr-only", @for = "txtDiscoveryUrl" })
+            @Html.TextBoxFor(model => model.CreateAuthenticationMethodModel.DiscoveryUrl, new { @class = "form-control", @id = "txtDiscoveryUrl" })
+            @Html.ValidationMessageFor(model => model.CreateAuthenticationMethodModel.DiscoveryUrl)
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>Create</button>
+        </div>
+    </form>
+
+</div>

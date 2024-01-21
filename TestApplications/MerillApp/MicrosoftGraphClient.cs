@@ -34,41 +34,53 @@ public class MicrosoftGraphClient
     ///  }
     ///}
     /// </summary>
-    public async Task<string> CreateAuthenticationMethodV2()
+    public async Task<string> CreateAuthenticationMethodV2(CreateAuthenticationMethodDto model)
     {
+        var createAuthenticationMethodModel = new CreateAuthenticationMethodModel
+        {
+            openIdConnectSetting = new openIdConnectSetting
+            {
+                discoveryUrl = model.DiscoveryUrl,
+                clientId = model.ClientId,
+            },
+            displayName = model.DisplayName,
+            appId = model.AppRegistrationId
+        };
+
         try
         {
-            var client = _clientFactory.CreateClient();
-            var baseAddress = "https://graph.microsoft.com/beta";
+            //var client = _clientFactory.CreateClient();
+            //var baseAddress = "https://graph.microsoft.com/beta";
 
-            var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new List<string> { "Policy.ReadWrite.AuthenticationMethod" });
+            //var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new List<string> { "Policy.ReadWrite.AuthenticationMethod" });
 
-            client.BaseAddress = new Uri(baseAddress);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //client.BaseAddress = new Uri(baseAddress);
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var json = System.Text.Json.JsonSerializer.Serialize(new CreateAuthenticationMethodMethod());
-            var response = await client.PostAsJsonAsync("https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations",
-                new CreateAuthenticationMethodMethod());
+            //var response = await client.PostAsJsonAsync("https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations",
+            //    createAuthenticationMethodModel);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var data = $"Graph API user name response: {responseContent}";
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var responseContent = await response.Content.ReadAsStringAsync();
+            //    var data = $"Graph API user name response: {responseContent}";
 
-                return data;
-            }
+            //    return data;
+            //}
 
-            throw new ApplicationException($"Status code: {response.StatusCode}, Error: {response.ReasonPhrase}");
+            //throw new ApplicationException($"Status code: {response.StatusCode}, Error: {response.ReasonPhrase}");
         }
         catch (Exception e)
         {
             throw new ApplicationException($"Exception {e}");
         }
+
+        return "";
     }
 }
 
-public class CreateAuthenticationMethodMethod
+public class CreateAuthenticationMethodModel
 {
     [JsonPropertyName("@odata.type")]
     public string OdataType { get; set; } = "#microsoft.graph.externalAuthenticationMethodConfiguration";
