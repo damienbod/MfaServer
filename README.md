@@ -93,6 +93,8 @@ private static async Task OnRedirectToIdentityProvider(RedirectContext context)
 
 https://documentation.openiddict.com/
 
+https://github.com/passwordless-lib/fido2-net-lib
+
 https://mysignins.microsoft.com/
 
 https://developer.microsoft.com/en-us/graph/graph-explorer
