@@ -83,13 +83,15 @@ await manager.CreateAsync(new OpenIddictApplicationDescriptor
 });
 ```
 
-Microsoft Entra ID uses the RedirectUris: **https://login.microsoftonline.com/common/federation/externalauthprovider**
+Microsoft Entra ID uses the RedirectUris: 
+
+https://login.microsoftonline.com/common/federation/externalauthprovider
 
 ### Setup Fido2/passkeys
 
 The FIDO2/passkeys authentication was implement using the [fido2-net-lib](https://github.com/passwordless-lib/fido2-net-lib) nuget package.
 
-This was implmented using the [AspNetCoreIdentityFido2Passwordless](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/tree/main/AspNetCoreIdentityFido2Passwordless) implementation. You need to replace all the ASP.NET Core Identity Razor Pages and add the WebAuthn js scripts from the wwwroot.
+This was implemented using the [AspNetCoreIdentityFido2Passwordless](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/tree/main/AspNetCoreIdentityFido2Passwordless) implementation. You need to replace all the ASP.NET Core Identity Razor Pages and add the WebAuthn js scripts from the wwwroot.
 
 The Fido2 appsettings configuration must be changed to match the server deployment.
 
@@ -106,10 +108,9 @@ The Fido2 appsettings configuration must be changed to match the server deployme
 
 ### Setup OpenIddict Implicit flow for ME-ID external authn
 
-The default Implicit flow client handling needs to be adapted for the Microsoft Entra ID external authentication flow. This is implemented in the AuthorizationController. This server is only used for this purpose, if implement this on an existing OpenID connect server, you would need to leave the default for the other flows. 
+The default Implicit flow client handling needs to be adapted for the Microsoft Entra ID external authentication flow. This is implemented in the **AuthorizationController**. This server is only used for this purpose, if implementing this on an existing OpenID Connect server, you would need to leave the default for the other flows. 
 
 The code implements the validation like in the Microsoft Entra ID documentation. It is important to validation the **id_token_hint** (including the signature) and to create the returned id_token with the extra claims and changed claims required by Microsoft Entra ID external authentication methods.
-
 
 ```csharp
 case ConsentTypes.Implicit:
