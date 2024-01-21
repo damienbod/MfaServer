@@ -1,7 +1,5 @@
-﻿using Microsoft.Graph.Beta.Models;
-using Microsoft.Identity.Web;
+﻿using Microsoft.Identity.Web;
 using System.Net.Http.Headers;
-using System.Net.Sockets;
 using System.Text.Json.Serialization;
 
 namespace MerillApp;
@@ -10,15 +8,12 @@ public class MicrosoftGraphClient
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly ITokenAcquisition _tokenAcquisition;
-    private readonly IConfiguration _configuration;
 
     public MicrosoftGraphClient(IHttpClientFactory clientFactory,
-       ITokenAcquisition tokenAcquisition,
-       IConfiguration configuration)
+       ITokenAcquisition tokenAcquisition)
     {
         _clientFactory = clientFactory;
         _tokenAcquisition = tokenAcquisition;
-        _configuration = configuration;
     }
 
     /// <summary>
@@ -48,34 +43,32 @@ public class MicrosoftGraphClient
 
         try
         {
-            //var client = _clientFactory.CreateClient();
-            //var baseAddress = "https://graph.microsoft.com/beta";
+            var client = _clientFactory.CreateClient();
+            var baseAddress = "https://graph.microsoft.com/beta";
 
-            //var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new List<string> { "Policy.ReadWrite.AuthenticationMethod" });
+            var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new List<string> { "Policy.ReadWrite.AuthenticationMethod" });
 
-            //client.BaseAddress = new Uri(baseAddress);
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.BaseAddress = new Uri(baseAddress);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            //var response = await client.PostAsJsonAsync("https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations",
-            //    createAuthenticationMethodModel);
+            var response = await client.PostAsJsonAsync("https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations",
+                createAuthenticationMethodModel);
 
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var responseContent = await response.Content.ReadAsStringAsync();
-            //    var data = $"Graph API user name response: {responseContent}";
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var data = $"Microsoft Graph response: {responseContent}";
 
-            //    return data;
-            //}
+                return data;
+            }
 
-            //throw new ApplicationException($"Status code: {response.StatusCode}, Error: {response.ReasonPhrase}");
+            throw new ApplicationException($"Status code: {response.StatusCode}, Error: {response.ReasonPhrase}");
         }
         catch (Exception e)
         {
             throw new ApplicationException($"Exception {e}");
         }
-
-        return "";
     }
 }
 
