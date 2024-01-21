@@ -83,7 +83,7 @@ await manager.CreateAsync(new OpenIddictApplicationDescriptor
 });
 ```
 
-Microsoft Entra ID uses the RedirectUris: 
+Microsoft Entra ID uses the **redirect_uri**: 
 
 https://login.microsoftonline.com/common/federation/externalauthprovider
 
