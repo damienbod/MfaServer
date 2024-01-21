@@ -1,100 +1,28 @@
-# FIDO2/passkeys MFA Server
+# FIDO MFA Server
+
+_Microsoft Entra ID: external authentication methods_
 
 [![.NET](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml)  [![Deploy app to Entra ID Web App](https://github.com/damienbod/MfaServer/actions/workflows/azure-webapps-dotnet-core.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/azure-webapps-dotnet-core.yml)
 
-## Database
+The MFA Server is implemented using an ASP.NET Core Web application. The application uses ASP.NET Core Identity to store and persist the users in an Azure SQL database. The MFA server uses passwordless-lib fido2-net-lib to implement the FIDO2 authentication. OpenIddict is used to implement the OpenID Connect flow.
 
-```
-Add-Migration "init_identity_new" 
-```
+![flow](https://github.com/damienbod/MfaServer/blob/main/images/me-id_external-authn-flows_01.png)
 
-```
-Update-Database
-```
+## Setup Microsoft Entra ID
 
-## MFA Server using FIDO
+See the Microsoft Entra ID: external authentication methods documentation.
 
-Update the app.settings to deploy
+## Setup MFA Server (OpenIddict, fido2-net-lib, ASP.NET Core Identity)
 
-```
-  "Fido2": {
-    "ServerDomain": "localhost",
-    "ServerName": "FidoMfaServer",
-    "Origins": [ "https://localhost:44318" ],
-    "TimestampDriftTolerance": 300000,
-    "MDSAccessKey": null
-  },
-  "IdTokenHintValidationConfiguration": {
-    "MetadataAddress": "https://login.microsoftonline.com/7ff95b15-dc21-4ba6-bc92-824856578fc1/v2.0/.well-known/openid-configuration",
-    "Issuer": "https://login.microsoftonline.com/7ff95b15-dc21-4ba6-bc92-824856578fc1/v2.0",
-    "Audience": "5c201b60-89f6-47d8-b2ef-9d9fe2a42751",
-    "TenantId": "7ff95b15-dc21-4ba6-bc92-824856578fc1"
-  },
-  "TestMode": "false",
-```
+## Known Issues
 
-## Microsoft Graph 
+- Only a single FIDO2/passkey can be registered per user. In a productive system, multiple key registration must be possible.
+- User would need a recovery in a productive system.
 
-POST 
-
-https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations
-
-Or PATCH 
-
-https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/7e3543fd-2045-459b-afa6-4a542d349c07
-
-```
-{
-    "@odata.type": "#microsoft.graph.externalAuthenticationMethodConfiguration",
-    "displayName": "FIDO2-passkeys-MFA",
-    "state": "enabled"
-    "appId": "4fabcfc0-5c44-45a1-8c80-8537f0625949", // remove external authentication app registration
-    "openIdConnectSetting": {
-        "clientId": "oidc-implicit-mfa-confidential",
-        "discoveryUrl": "https://fidomfaserver.azurewebsites.net/.well-known/openid-configuration"
-    },
-    "includeTarget": { // switch this if only specific users are required
-        "targetType": "group",
-        "id": "all_users"
-    }
-}
-```
-
-## MFA Test UI
-
-```csharp
-.AddMicrosoftIdentityWebApp(options =>
-{
-    builder.Configuration.Bind("AzureAd", options);
-    options.UsePkce = true;
-    options.Events = new OpenIdConnectEvents();
-
-    options.Events.OnTokenResponseReceived = async context =>
-    {
-        var idToken = context.TokenEndpointResponse.IdToken;
-    };
-},
-```
-
-Use the id_token:
-
-```csharp
-private static async Task OnRedirectToIdentityProvider(RedirectContext context)
-{
-    context.ProtocolMessage.IdTokenHint = "eyJ... your-entra-id-id_token-goes-here";
-
-    context.ProtocolMessage.Parameters
-        .Add("claims", CreateClaimsIdTokenPayload.GenerateClaims());
-}
-```
-
-
-## Links
+## Credits, non Microsoft libraries used in this setup
 
 https://documentation.openiddict.com/
 
 https://github.com/passwordless-lib/fido2-net-lib
 
-https://mysignins.microsoft.com/
 
-https://developer.microsoft.com/en-us/graph/graph-explorer
