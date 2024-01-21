@@ -3,7 +3,6 @@ using Microsoft.Identity.Web;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text.Json.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MerillApp;
 
