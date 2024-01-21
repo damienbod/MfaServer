@@ -42,7 +42,9 @@ https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authentica
 The https://developer.microsoft.com/en-us/graph/graph-explorer can be used to run this.
 
 
-## Setup FIDO2/passkeys MFA Server (OpenIddict, fido2-net-lib, ASP.NET Core Identity)
+## Setup FIDO2/passkeys MFA Server 
+
+_(OpenIddict, fido2-net-lib, ASP.NET Core Identity)_
 
 ## Known Issues
 
