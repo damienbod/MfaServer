@@ -10,18 +10,22 @@ public class CreateGraphAuthMethodModel : PageModel
     [BindProperty]
     public CreateAuthenticationMethodDto CreateAuthenticationMethodModel { get; set; } = new CreateAuthenticationMethodDto();
 
+    [BindProperty]
+    public string Result { get; set; } = string.Empty;
+
+
     public CreateGraphAuthMethodModel(MicrosoftGraphClient microsoftGraphClient)
     {
         _microsoftGraphClient = microsoftGraphClient;
     }
 
-    public async Task OnGetAsync()
+    public void OnGet()
     {
     }
 
     public async Task OnPostAsync()
     {
-        await _microsoftGraphClient.CreateAuthenticationMethodV2(CreateAuthenticationMethodModel);
+        Result = await _microsoftGraphClient
+            .CreateAuthenticationMethodV2(CreateAuthenticationMethodModel);
     }
-
 }
