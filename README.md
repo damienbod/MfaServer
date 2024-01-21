@@ -194,9 +194,24 @@ case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Promp
 
 ```
 
+The appsettings need to match your Microsoft Entra ID tenant and the used App registrations
+
+```
+"IdTokenHintValidationConfiguration": {
+    "MetadataAddress": "https://login.microsoftonline.com/--your-tenant-id--/v2.0/.well-known/openid-configuration",
+    "Issuer": "https://login.microsoftonline.com/--your-tenant-id--/v2.0",
+    // client_id from the app we allow, i.e. MerillApp App Registration
+    // We can enable or disable this validation if app aud are to be accepted.
+    "Audience": "--your-client-id.app-using-the-mfa--",
+    // If this is true, Audience (App registration client_id) is validated.
+    "ValidateAudience": "False", 
+    "TenantId": "--your-tenant-id--"
+},
+```
+
 ## Known Issues
 
-- Only a single FIDO2/passkey can be registered per user. In a productive system, multiple key registration must be possible.
+- Only a single FIDO2/passkeys key can be registered per user. In a productive system, multiple key registration must be possible.
 - User would need a recovery in a productive system.
 
 ## Credits, non Microsoft projects used in this setup
