@@ -48,13 +48,13 @@ _(OpenIddict, fido2-net-lib, ASP.NET Core Identity)_
 
 ### Core Setup OpenIddict
 
-The Microsoft Entra ID external authentication provider requires an OpenID connect server to interact with. OpenIddict is used to implement this. Any OpenID Connect can be used, as long as you can customize the claims returned in the id_token. ASP.NET Core Identity is used to persist the users to the database.
+The Microsoft Entra ID external authentication provider requires an OpenID connect server to interact with. OpenIddict is used to implement this. Any OpenID Connect implementation can be used, as long as you can customize the claims returned in the id_token. ASP.NET Core Identity is used to persist the users to the database.
 
 See [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance.html)
 
 OpenID Connect implicit flow is used and in OpenIddict, this can be configured in the Worker class. An id_token_hint is used to send the user data from Microsoft Entra ID. 
 
-Here is an example of a possible OpenIddict client setup
+Here is an example of a possible OpenIddict client setup:
 
 ```csharp
 await manager.CreateAsync(new OpenIddictApplicationDescriptor
@@ -66,15 +66,9 @@ await manager.CreateAsync(new OpenIddictApplicationDescriptor
     {
         [CultureInfo.GetCultureInfo("fr-FR")] = "Application cliente MVC"
     },
-    PostLogoutRedirectUris =
-    {
-        new Uri("https://localhost:5001/signout-callback-oidc")
-    },
     RedirectUris =
     {
-        new Uri("https://localhost:5001/signin-oidc"), // local dev
         new Uri("https://login.microsoftonline.com/common/federation/externalauthprovider")
-
     },
     Permissions =
     {
@@ -89,11 +83,115 @@ await manager.CreateAsync(new OpenIddictApplicationDescriptor
 });
 ```
 
+Microsoft Entra ID uses the RedirectUris: **https://login.microsoftonline.com/common/federation/externalauthprovider**
+
 ### Setup Fido2/passkeys
 
-[AspNetCoreIdentityFido2Passwordless](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/tree/main/AspNetCoreIdentityFido2Passwordless)
+The FIDO2/passkeys authentication was implement using the [fido2-net-lib](https://github.com/passwordless-lib/fido2-net-lib) nuget package.
+
+This was implmented using the [AspNetCoreIdentityFido2Passwordless](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/tree/main/AspNetCoreIdentityFido2Passwordless) implementation. You need to replace all the ASP.NET Core Identity Razor Pages and add the WebAuthn js scripts from the wwwroot.
+
+The Fido2 appsettings configuration must be changed to match the server deployment.
+
+```
+"Fido2": {
+    // This must match the deployment domain
+    "ServerDomain": "https://fidomfaserver.azurewebsites.net",
+    "ServerName": "FidoMfaServer",
+    "Origins": [ "https://fidomfaserver.azurewebsites.net" ],
+    "TimestampDriftTolerance": 300000,
+    "MDSAccessKey": null
+},
+```
 
 ### Setup OpenIddict Implicit flow for ME-ID external authn
+
+The default Implicit flow client handling needs to be adapted for the Microsoft Entra ID external authentication flow. This is implemented in the AuthorizationController. This server is only used for this purpose, if implement this on an existing OpenID connect server, you would need to leave the default for the other flows. 
+
+The code implements the validation like in the Microsoft Entra ID documentation. It is important to validation the **id_token_hint** (including the signature) and to create the returned id_token with the extra claims and changed claims required by Microsoft Entra ID external authentication methods.
+
+
+```csharp
+case ConsentTypes.Implicit:
+case ConsentTypes.External when authorizations.Any():
+case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
+    var principal = await _signInManager.CreateUserPrincipalAsync(user);
+
+    // Note: in this sample, the granted scopes match the requested scope
+    // but you may want to allow the user to uncheck specific scopes.
+    // For that, simply restrict the list of scopes before calling SetScopes.
+    principal.SetScopes(request.GetScopes());
+    principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+
+    // Automatically create a permanent authorization to avoid requiring explicit consent
+    // for future authorization or token requests containing the same scopes.
+    var authorization = authorizations.LastOrDefault();
+    if (authorization == null)
+    {
+        authorization = await _authorizationManager.CreateAsync(
+            principal: principal,
+            subject: await _userManager.GetUserIdAsync(user),
+            client: await _applicationManager.GetIdAsync(application),
+            type: AuthorizationTypes.Permanent,
+            scopes: principal.GetScopes());
+    }
+
+    principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
+
+    //get well known endpoints and validate access token sent in the assertion
+    var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+        _idTokenHintValidationConfiguration.MetadataAddress,
+        new OpenIdConnectConfigurationRetriever());
+
+    var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
+
+    var idTokenHintValidationResult = ValidateIdTokenHintRequestPayload.ValidateTokenAndSignature(
+        request.IdTokenHint,
+        _idTokenHintValidationConfiguration,
+        wellKnownEndpoints.SigningKeys,
+        _testingMode);
+
+    if (!idTokenHintValidationResult.Valid)
+    {
+        return UnauthorizedValidationParametersFailed(idTokenHintValidationResult.Reason,
+            "id_token_hint validation failed");
+    }
+
+    var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
+
+    //principal.AddClaim("acr", "possessionorinherence");
+    principal.AddClaim("acr", "fido");
+    var sub = idTokenHintValidationResult.ClaimsPrincipal
+        .Claims.First(d => d.Type == "sub");
+
+    principal.RemoveClaims("sub");
+    principal.AddClaim(sub.Type, sub.Value);
+
+    var claims = principal.Claims.ToList();
+    claims.Add(new Claim("amr", "[\"fido\"]", JsonClaimValueTypes.JsonArray));
+
+    ClaimsPrincipal cp = new();
+    cp.AddIdentity(new ClaimsIdentity(claims, principal.Identity.AuthenticationType));
+
+    foreach (var claim in cp.Claims)
+    {
+        claim.SetDestinations(GetDestinations(claim, cp));
+    }
+
+    var (Valid, Reason, Error) = ValidateIdTokenHintRequestPayload
+        .IsValid(idTokenHintValidationResult.ClaimsPrincipal, 
+        _idTokenHintValidationConfiguration,
+        user.EntraIdOid,
+        user.UserName);
+
+    if (!Valid)
+    {
+        return UnauthorizedValidationParametersFailed(Reason, Error);
+    }
+
+    return SignIn(cp, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+```
 
 ## Known Issues
 
