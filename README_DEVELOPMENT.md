@@ -98,3 +98,5 @@ https://github.com/passwordless-lib/fido2-net-lib
 https://mysignins.microsoft.com/
 
 https://developer.microsoft.com/en-us/graph/graph-explorer
+
+https://github.com/damienbod/AspNetCoreIdentityFido2Mfa

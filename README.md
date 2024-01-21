@@ -46,15 +46,25 @@ The https://developer.microsoft.com/en-us/graph/graph-explorer can be used to ru
 
 _(OpenIddict, fido2-net-lib, ASP.NET Core Identity)_
 
+### Core Setup OpenIddict
+
+### Setup Fido2/passkeys
+
+[AspNetCoreIdentityFido2Passwordless](https://github.com/damienbod/AspNetCoreIdentityFido2Mfa/tree/main/AspNetCoreIdentityFido2Passwordless)
+
+### Setup OpenIddict Implicit flow for ME-ID external authn
+
 ## Known Issues
 
 - Only a single FIDO2/passkey can be registered per user. In a productive system, multiple key registration must be possible.
 - User would need a recovery in a productive system.
 
-## Credits, non Microsoft libraries used in this setup
+## Credits, non Microsoft projects used in this setup
 
 https://documentation.openiddict.com/
 
 https://github.com/passwordless-lib/fido2-net-lib
+
+https://github.com/damienbod/AspNetCoreIdentityFido2Mfa
 
 
