@@ -27,7 +27,7 @@ https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authentica
     "@odata.type": "#microsoft.graph.externalAuthenticationMethodConfiguration",
     "displayName": "--name-of-provider--", // Displayed in login
     "state": "enabled"
-    "appId": "4fabcfc0-5c44-45a1-8c80-8537f0625949", // external authentication app registration
+    "appId": "--app-registration-clientId--", // external authentication app registration, see docs
     "openIdConnectSetting": {
         "clientId": "--your-client_id-from-external-provider--",
         "discoveryUrl": "--your-external-provider-url--/.well-known/openid-configuration"
@@ -47,6 +47,47 @@ The https://developer.microsoft.com/en-us/graph/graph-explorer can be used to ru
 _(OpenIddict, fido2-net-lib, ASP.NET Core Identity)_
 
 ### Core Setup OpenIddict
+
+The Microsoft Entra ID external authentication provider requires an OpenID connect server to interact with. OpenIddict is used to implement this. Any OpenID Connect can be used, as long as you can customize the claims returned in the id_token. ASP.NET Core Identity is used to persist the users to the database.
+
+See [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance.html)
+
+OpenID Connect implicit flow is used and in OpenIddict, this can be configured in the Worker class. An id_token_hint is used to send the user data from Microsoft Entra ID. 
+
+Here is an example of a possible OpenIddict client setup
+
+```csharp
+await manager.CreateAsync(new OpenIddictApplicationDescriptor
+{
+    ClientId = "oidc-implicit-mfa",
+    ConsentType = ConsentTypes.Implicit,
+    DisplayName = "OIDC Implicit Flow for MFA",
+    DisplayNames =
+    {
+        [CultureInfo.GetCultureInfo("fr-FR")] = "Application cliente MVC"
+    },
+    PostLogoutRedirectUris =
+    {
+        new Uri("https://localhost:5001/signout-callback-oidc")
+    },
+    RedirectUris =
+    {
+        new Uri("https://localhost:5001/signin-oidc"), // local dev
+        new Uri("https://login.microsoftonline.com/common/federation/externalauthprovider")
+
+    },
+    Permissions =
+    {
+        Permissions.Endpoints.Authorization,
+        Permissions.Endpoints.Revocation,
+        Permissions.GrantTypes.Implicit,
+        Permissions.ResponseTypes.IdToken,
+        Permissions.Scopes.Email,
+        Permissions.Scopes.Profile,
+        Permissions.Scopes.Roles
+    }
+});
+```
 
 ### Setup Fido2/passkeys
 

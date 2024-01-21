@@ -33,7 +33,7 @@ public class Worker : IHostedService
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "oidc-implicit-mfa-confidential",
+                    ClientId = "oidc-implicit-mfa-confidential", // need to rename, not a confidential client
                     ConsentType = ConsentTypes.Implicit,
                     DisplayName = "OIDC Implicit Flow for MFA",
                     DisplayNames =
@@ -46,12 +46,10 @@ public class Worker : IHostedService
                     },
                     RedirectUris =
                     {
-                        new Uri("https://localhost:5001/signin-oidc"),
-                        new Uri("https://b8dcfa58960c.ngrok.app/signin-oidc"),
+                        new Uri("https://localhost:5001/signin-oidc"), // local dev
                         new Uri("https://login.microsoftonline.com/common/federation/externalauthprovider")
 
                     },
-                    //ClientSecret = "oidc-id_token-confidential_secret",
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
