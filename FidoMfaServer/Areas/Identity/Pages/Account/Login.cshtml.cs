@@ -34,8 +34,7 @@ public class LoginModel : PageModel
         if (returnUrl != null)
         {
             var queryParams = QueryHelpers.ParseQuery(returnUrl);
-            StringValues stringValues;
-            var exists = queryParams.TryGetValue("id_token_hint", out stringValues);
+            var exists = queryParams.TryGetValue("id_token_hint", out StringValues stringValues);
             if (exists)
             {
                 id_token_hint = stringValues.FirstOrDefault();
