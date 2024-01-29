@@ -98,7 +98,7 @@ The Fido2 appsettings configuration must be changed to match the server deployme
 ```
 "Fido2": {
     // This must match the deployment domain
-    "ServerDomain": "https://fidomfaserver.azurewebsites.net",
+    "ServerDomain": "fidomfaserver.azurewebsites.net",
     "ServerName": "FidoMfaServer",
     "Origins": [ "https://fidomfaserver.azurewebsites.net" ],
     "TimestampDriftTolerance": 300000,
