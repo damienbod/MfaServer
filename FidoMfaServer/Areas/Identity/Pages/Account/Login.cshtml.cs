@@ -21,6 +21,9 @@ public class LoginModel : PageModel
     [BindProperty(SupportsGet = true)]
     public string? UserName { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public string? Name { get; set; }
+
     public LoginModel(IOptions<IdTokenHintValidationConfiguration> idTokenHintValidationConfiguration,
          ApplicationDbContext applicationDbContext)
     {
@@ -62,7 +65,10 @@ public class LoginModel : PageModel
         var oid = idTokenHintValidationResult
             .ClaimsPrincipal.Claims.FirstOrDefault(o => o.Type == "oid");
 
-        if(oid == null)
+        Name = idTokenHintValidationResult
+           .ClaimsPrincipal.Claims.FirstOrDefault(n => n.Type == "name")!.Value;
+
+        if (oid == null)
         {
             throw new UnauthorizedAccessException("invalid id_token, missing oid");
         }
