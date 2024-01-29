@@ -1,15 +1,14 @@
 ﻿using FidoMfaServer.IdTokenHintValidation;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using FidoMfaServer.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace FidoMfaServer.Areas.Identity.Pages.Account;
 
@@ -18,10 +17,16 @@ public class LoginModel : PageModel
 {
     private readonly IdTokenHintValidationConfiguration _idTokenHintValidationConfiguration;
     private readonly bool _testingMode;
+    private readonly ApplicationDbContext _applicationDbContext;
 
-    public LoginModel(IOptions<IdTokenHintValidationConfiguration> idTokenHintValidationConfiguration)
+    [BindProperty(SupportsGet = true)]
+    public string? UserName { get; set; }
+
+    public LoginModel(IOptions<IdTokenHintValidationConfiguration> idTokenHintValidationConfiguration,
+         ApplicationDbContext applicationDbContext)
     {
         _idTokenHintValidationConfiguration = idTokenHintValidationConfiguration.Value;
+        _applicationDbContext = applicationDbContext;
     }
 
     public async Task OnGetAsync([FromQuery] string? returnUrl)
@@ -56,6 +61,22 @@ public class LoginModel : PageModel
             // throw 401
         }
 
+        var oid = idTokenHintValidationResult
+            .ClaimsPrincipal.Claims.FirstOrDefault(o => o.Type == "oid");
+
+        if(oid == null)
+        {
+            // throw 401
+        }
+
+        var user = _applicationDbContext.Users.FirstOrDefault(u => u.EntraIdOid == oid.Value);
+
+        if (user == null)
+        {
+            // throw 401
+        }
+
+        UserName = user.UserName;
     }
 
     public void OnPost()
