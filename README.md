@@ -215,6 +215,8 @@ The **IdTokenHintValidation** FidoMfaServer project in the  implements the diffe
 
 - Only a single FIDO2/passkeys key can be registered per user. In a productive system, multiple key registration must be possible.
 - User would need a recovery in a productive system.
+- Need to add a SCIM import of users
+- Register page needs to be made only allowed validated Microsoft Entra ID users
 
 ## Credits, non Microsoft projects used in this setup
 
