@@ -50,7 +50,6 @@ public class PwFido2SignInController : Controller
     {
         try
         {
-
             var existingCredentials = new List<PublicKeyCredentialDescriptor>();
 
             if (!string.IsNullOrEmpty(username))
