@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using FidoMfaServer.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace FidoMfaServer.Areas.Identity.Pages.Account;
 
@@ -58,7 +57,7 @@ public class LoginModel : PageModel
 
         if (!idTokenHintValidationResult.Valid)
         {
-            // throw 401
+            throw new UnauthorizedAccessException("invalid id_token");
         }
 
         var oid = idTokenHintValidationResult
@@ -66,14 +65,14 @@ public class LoginModel : PageModel
 
         if(oid == null)
         {
-            // throw 401
+            throw new UnauthorizedAccessException("invalid id_token, missing oid");
         }
 
         var user = _applicationDbContext.Users.FirstOrDefault(u => u.EntraIdOid == oid.Value);
 
         if (user == null)
         {
-            // throw 401
+            throw new UnauthorizedAccessException("no user found");
         }
 
         UserName = user.UserName;
