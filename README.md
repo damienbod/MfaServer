@@ -110,7 +110,7 @@ The Fido2 appsettings configuration must be changed to match the server deployme
 
 The default Implicit flow client handling needs to be adapted for the Microsoft Entra ID external authentication flow. This is implemented in the **AuthorizationController**. This server is only used for this purpose, if implementing this on an existing OpenID Connect server, you would need to leave the default for the other flows. 
 
-The code implements the validation like in the Microsoft Entra ID documentation. It is important to validation the **id_token_hint** (including the signature) and to create the returned id_token with the extra claims and changed claims required by Microsoft Entra ID external authentication methods.
+The code implements the validation like in the Microsoft Entra ID documentation. It is important to validate the **id_token_hint** (including the signature) and to create the returned id_token with the extra claims and changed claims required by Microsoft Entra ID external authentication methods.
 
 ```csharp
 case ConsentTypes.Implicit:
