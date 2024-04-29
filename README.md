@@ -209,7 +209,7 @@ The appsettings need to match your Microsoft Entra ID tenant and the used App re
 },
 ```
 
-The **IdTokenHintValidation** FidoMfaServer project in the  implements the different flow validations.
+The **IdTokenHintValidation** Folder in the FidoMfaServer project implements the different flow validations.
 
 ## Known Issues
 
