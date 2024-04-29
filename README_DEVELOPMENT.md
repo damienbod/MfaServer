@@ -88,6 +88,21 @@ private static async Task OnRedirectToIdentityProvider(RedirectContext context)
 }
 ```
 
+CreateClaimsIdTokenPayload.GenerateClaims() creates the following payload (from docs):
+
+```json
+{
+    "id_token": {
+        "acr": {
+            "essential": true,
+            "values":["possessionorinherence"]
+        },
+        "amr": {
+            "essential": true,
+        }
+    }
+}
+```
 
 ## Links
 
