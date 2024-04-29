@@ -60,7 +60,7 @@ public class LoginModel : PageModel
 
         if (!idTokenHintValidationResult.Valid)
         {
-            throw new UnauthorizedAccessException("invalid id_token");
+            throw new UnauthorizedAccessException($"invalid id_token: {idTokenHintValidationResult.TokenValidationResult}");
         }
 
         var oid = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity

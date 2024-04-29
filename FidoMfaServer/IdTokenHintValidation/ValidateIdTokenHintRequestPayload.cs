@@ -86,7 +86,12 @@ public static class ValidateIdTokenHintRequestPayload
 
             var tokenValidationResult = await tokenValidator.ValidateTokenAsync(jwtToken, validationParameters);
 
-            return (true, string.Empty, tokenValidationResult);
+            if(!tokenValidationResult.IsValid)
+            {
+                return (tokenValidationResult.IsValid, tokenValidationResult.Exception!.Message, tokenValidationResult);
+            }
+
+            return (tokenValidationResult.IsValid, string.Empty, tokenValidationResult);
         }
         catch (Exception ex)
         {
