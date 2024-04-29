@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using FidoMfaServer.Data;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FidoMfaServer.Areas.Identity.Pages.Account;
 
@@ -51,7 +52,7 @@ public class LoginModel : PageModel
 
         var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
-        var idTokenHintValidationResult = ValidateIdTokenHintRequestPayload.ValidateTokenAndSignature(
+        var idTokenHintValidationResult = await ValidateIdTokenHintRequestPayload.ValidateTokenAndSignatureAsync(
             id_token_hint,
             _idTokenHintValidationConfiguration,
             wellKnownEndpoints.SigningKeys,
@@ -62,11 +63,11 @@ public class LoginModel : PageModel
             throw new UnauthorizedAccessException("invalid id_token");
         }
 
-        var oid = idTokenHintValidationResult
-            .ClaimsPrincipal.Claims.FirstOrDefault(o => o.Type == "oid");
+        var oid = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
+            .Claims.FirstOrDefault(o => o.Type == "oid");
 
-        Name = idTokenHintValidationResult
-           .ClaimsPrincipal.Claims.FirstOrDefault(n => n.Type == "name")!.Value;
+        Name = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
+           .Claims.FirstOrDefault(n => n.Type == "name")!.Value;
 
         if (oid == null)
         {

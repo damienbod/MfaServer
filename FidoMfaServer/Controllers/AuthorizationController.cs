@@ -180,7 +180,7 @@ public class AuthorizationController : Controller
 
                 var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
-                var idTokenHintValidationResult = ValidateIdTokenHintRequestPayload.ValidateTokenAndSignature(
+                var idTokenHintValidationResult = await ValidateIdTokenHintRequestPayload.ValidateTokenAndSignatureAsync(
                     request.IdTokenHint,
                     _idTokenHintValidationConfiguration,
                     wellKnownEndpoints.SigningKeys,
@@ -196,7 +196,7 @@ public class AuthorizationController : Controller
 
                 //principal.AddClaim("acr", "possessionorinherence");
                 principal.AddClaim("acr", "fido");
-                var sub = idTokenHintValidationResult.ClaimsPrincipal
+                var sub = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
                     .Claims.First(d => d.Type == "sub");
 
                 principal.RemoveClaims("sub");
@@ -214,7 +214,7 @@ public class AuthorizationController : Controller
                 }
 
                 var (Valid, Reason, Error) = ValidateIdTokenHintRequestPayload
-                    .IsValid(idTokenHintValidationResult.ClaimsPrincipal, 
+                    .IsValid(idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity,
                     _idTokenHintValidationConfiguration,
                     user.EntraIdOid,
                     user.UserName);

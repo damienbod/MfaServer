@@ -1,5 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using System.Net.Mail;
 using System.Security.Claims;
 
@@ -7,7 +7,7 @@ namespace FidoMfaServer.IdTokenHintValidation;
 
 public static class ValidateIdTokenHintRequestPayload
 {
-    public static (bool Valid, string Reason, string Error) IsValid(ClaimsPrincipal claimsIdTokenPrincipal, 
+    public static (bool Valid, string Reason, string Error) IsValid(ClaimsIdentity claimsIdTokenPrincipal, 
         IdTokenHintValidationConfiguration configuration, 
         string userEntraIdOid, 
         string userName)
@@ -50,7 +50,7 @@ public static class ValidateIdTokenHintRequestPayload
         return (true, string.Empty, string.Empty);
     }
 
-    public static (bool Valid, string Reason, ClaimsPrincipal ClaimsPrincipal) ValidateTokenAndSignature(
+    public static async Task<(bool Valid, string Reason, TokenValidationResult TokenValidationResult)> ValidateTokenAndSignatureAsync(
         string jwtToken,
         IdTokenHintValidationConfiguration idTokenConfiguration,
         ICollection<SecurityKey> signingKeys,
@@ -79,11 +79,14 @@ public static class ValidateIdTokenHintRequestPayload
                 validationParameters.ValidateLifetime = false;
             }
 
-            ISecurityTokenValidator tokenValidator = new JwtSecurityTokenHandler();
+            var tokenValidator = new JsonWebTokenHandler
+            {
+                MapInboundClaims = false
+            };
 
-            var claimsPrincipal = tokenValidator.ValidateToken(jwtToken, validationParameters, out var _);
+            var tokenValidationResult = await tokenValidator.ValidateTokenAsync(jwtToken, validationParameters);
 
-            return (true, string.Empty, claimsPrincipal);
+            return (true, string.Empty, tokenValidationResult);
         }
         catch (Exception ex)
         {
@@ -91,21 +94,21 @@ public static class ValidateIdTokenHintRequestPayload
         }
     }
 
-    public static string GetPreferredUserName(ClaimsPrincipal claimsPrincipal)
+    public static string GetPreferredUserName(ClaimsIdentity claimsIdentity)
     {
-        var preferred_username = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "preferred_username");
+        var preferred_username = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "preferred_username");
         return preferred_username?.Value ?? string.Empty;
     }
 
-    public static string GetAzpacr(ClaimsPrincipal claimsPrincipal)
+    public static string GetAzpacr(ClaimsIdentity claimsIdentity)
     {
-        var azpacrClaim = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "azpacr");
+        var azpacrClaim = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "azpacr");
         return azpacrClaim?.Value ?? string.Empty;
     }
 
-    public static string GetAzp(ClaimsPrincipal claimsPrincipal)
+    public static string GetAzp(ClaimsIdentity claimsIdentity)
     {
-        var azpClaim = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "azp");
+        var azpClaim = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "azp");
         return azpClaim?.Value ?? string.Empty;
     }
 
