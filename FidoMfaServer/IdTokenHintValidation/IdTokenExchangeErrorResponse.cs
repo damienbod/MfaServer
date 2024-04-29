@@ -19,7 +19,7 @@ public class IdTokenExchangeErrorResponse
     public string? error_description { get; set; }
 
     [JsonPropertyName(EntraIdTokenRequestConsts.RESPONSE_ERROR_URI)]
-    public string? error_uri { get; set; }    
+    public string? error_uri { get; set; }
 
     // NON spec, additional optional
 

@@ -80,7 +80,7 @@ public class CreateAuthenticationMethodModel
     public string state { get; set; } = "enabled";
     public string appId { get; set; } = "c5684f52-769e-471a-b7b5-9b9a94af97d4";
     public openIdConnectSetting openIdConnectSetting { get; set; } = new openIdConnectSetting();
-    public includeTarget includeTarget { get; set; } = new includeTarget(); 
+    public includeTarget includeTarget { get; set; } = new includeTarget();
 }
 
 public class openIdConnectSetting

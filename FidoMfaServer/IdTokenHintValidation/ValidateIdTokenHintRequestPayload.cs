@@ -7,11 +7,11 @@ namespace FidoMfaServer.IdTokenHintValidation;
 
 public static class ValidateIdTokenHintRequestPayload
 {
-    public static (bool Valid, string Reason, string Error) IsValid(ClaimsIdentity claimsIdTokenPrincipal, 
-        IdTokenHintValidationConfiguration configuration, 
-        string userEntraIdOid, 
+    public static (bool Valid, string Reason, string Error) IsValid(ClaimsIdentity claimsIdTokenPrincipal,
+        IdTokenHintValidationConfiguration configuration,
+        string userEntraIdOid,
         string userName)
-    { 
+    {
         // oid from id_token_hint must match User OID
         var oid = claimsIdTokenPrincipal.FindFirst("oid").Value;
         if (!oid!.Equals(userEntraIdOid))
@@ -21,7 +21,7 @@ public static class ValidateIdTokenHintRequestPayload
         };
 
         // aud must match allowed audience if for a specifc app
-        if(configuration.ValidateAudience)
+        if (configuration.ValidateAudience)
         {
             var aud = claimsIdTokenPrincipal.FindFirst("aud").Value;
             if (!aud!.Equals(configuration.Audience))
@@ -29,7 +29,7 @@ public static class ValidateIdTokenHintRequestPayload
                 return (false, "client_id parameter has an incorrect value",
                     EntraIdTokenRequestConsts.ERROR_INVALID_CLIENT);
             };
-        }    
+        }
 
         // tid must match allowed tenant
         var tid = claimsIdTokenPrincipal.FindFirst("tid").Value;
@@ -86,7 +86,7 @@ public static class ValidateIdTokenHintRequestPayload
 
             var tokenValidationResult = await tokenValidator.ValidateTokenAsync(jwtToken, validationParameters);
 
-            if(!tokenValidationResult.IsValid)
+            if (!tokenValidationResult.IsValid)
             {
                 return (tokenValidationResult.IsValid, tokenValidationResult.Exception!.Message, tokenValidationResult);
             }

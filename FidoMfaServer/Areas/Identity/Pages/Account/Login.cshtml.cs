@@ -1,14 +1,13 @@
-﻿using FidoMfaServer.IdTokenHintValidation;
+﻿using FidoMfaServer.Data;
+using FidoMfaServer.IdTokenHintValidation;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Protocols;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using FidoMfaServer.Data;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace FidoMfaServer.Areas.Identity.Pages.Account;
 
@@ -16,7 +15,6 @@ namespace FidoMfaServer.Areas.Identity.Pages.Account;
 public class LoginModel : PageModel
 {
     private readonly IdTokenHintValidationConfiguration _idTokenHintValidationConfiguration;
-    private readonly bool _testingMode;
     private readonly ApplicationDbContext _applicationDbContext;
 
     [BindProperty(SupportsGet = true)]

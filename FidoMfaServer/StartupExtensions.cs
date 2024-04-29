@@ -4,13 +4,10 @@ using FidoMfaServer.Data;
 using FidoMfaServer.IdTokenHintValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Quartz;
 using Serilog;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -132,7 +129,7 @@ internal static class StartupExtensions
 
                 options.AddSigningCertificate(signingCert)
                     .AddEncryptionCertificate(encryptionCert);
-           
+
 
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()

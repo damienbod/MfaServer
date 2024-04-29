@@ -29,7 +29,7 @@ public class Program
                 };
             })
             .EnableTokenAcquisitionToCallDownstreamApi()
-            .AddMicrosoftGraph(graphBaseUrl: "https://graph.microsoft.com/beta", new List<string> { 
+            .AddMicrosoftGraph(graphBaseUrl: "https://graph.microsoft.com/beta", new List<string> {
                 "Policy.ReadWrite.AuthenticationMethod" })
             .AddDistributedTokenCaches();
 
