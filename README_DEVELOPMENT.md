@@ -14,7 +14,7 @@ Update-Database
 
 ## MFA Server using FIDO
 
-Update the app.settings to deploy
+Update the app.settings to deploy. The ServerDomain MUST match the deployed domain.
 
 ```
   "Fido2": {
@@ -60,8 +60,10 @@ https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authentica
 }
 ```
 
-## MFA Test UI
+## MFA Testing
 
+The **MerillApp** is used to login to the Microsoft Entra ID application. The app can be used to get an id_token for testing or to test on the deployed tenant.
+_
 ```csharp
 .AddMicrosoftIdentityWebApp(options =>
 {
@@ -76,7 +78,42 @@ https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authentica
 },
 ```
 
-Use the id_token:
+### MfaIdpImplicitFlowTest application
+
+The **MfaIdpImplicitFlowTest** is used to test the MFA server. This is what Microsoft Entra ID external MFA would request when using an external MFA server.
+
+You can use this application to test the MFA server without ME-ID.
+
+OIDC Implicit flow is used. Use the id_token:
+
+```csharp
+services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddOpenIdConnect(options =>
+{
+    options.SignInScheme = "Cookies";
+    options.Authority = mfaProvider;
+    options.RequireHttpsMetadata = true;
+    options.ClientId = "oidc-implicit-mfa-confidential";
+    options.ResponseType = "id_token";
+    options.UsePkce = false;
+    options.GetClaimsFromUserInfoEndpoint = false;
+    options.Scope.Add("email");
+
+    options.SaveTokens = true;
+
+    options.Events = new OpenIdConnectEvents
+    {
+        OnRedirectToIdentityProvider = OnRedirectToIdentityProvider,
+    };
+});
+```
+
+The OnRedirectToIdentityProvider adds the payload as ME-ID would send:
 
 ```csharp
 private static async Task OnRedirectToIdentityProvider(RedirectContext context)
