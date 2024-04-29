@@ -202,6 +202,8 @@ public class AuthorizationController : Controller
                 principal.AddClaim(sub.Type, sub.Value);
 
                 var claims = principal.Claims.ToList();
+
+                // update openiddict 5.0.1 => 5.1.0, breaking change causes this to crash.
                 claims.Add(new Claim("amr", "[\"fido\"]", JsonClaimValueTypes.JsonArray));
 
                 ClaimsPrincipal cp = new();
