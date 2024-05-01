@@ -160,8 +160,8 @@ case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Promp
 
     var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
 
-    //principal.AddClaim("acr", "possessionorinherence");
-    principal.AddClaim("acr", "fido");
+    principal.AddClaim("acr", "possessionorinherence");
+
     var sub = idTokenHintValidationResult.ClaimsPrincipal
         .Claims.First(d => d.Type == "sub");
 
