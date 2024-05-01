@@ -194,7 +194,7 @@ case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Promp
 
 ```
 
-The appsettings need to match your Microsoft Entra ID tenant and the used App registration
+The appsettings need to match your Microsoft Entra ID tenant and the used Azure App registration
 
 ```
 "IdTokenHintValidationConfiguration": {
