@@ -143,6 +143,10 @@ CreateClaimsIdTokenPayload.GenerateClaims() creates the following payload (from 
 
 ## Links
 
+https://learn.microsoft.com/en-gb/entra/identity/authentication/concept-authentication-external-method-provider
+
+https://learn.microsoft.com/en-gb/entra/identity/authentication/how-to-authentication-external-method-manage
+
 https://documentation.openiddict.com/
 
 https://github.com/passwordless-lib/fido2-net-lib

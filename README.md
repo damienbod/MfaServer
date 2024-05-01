@@ -218,6 +218,12 @@ The **IdTokenHintValidation** Folder in the FidoMfaServer project implements the
 - Need to add a SCIM import of users
 - Register page should only allow validated Microsoft Entra ID users and use the OID from the id_token
 
+## Docs
+
+https://learn.microsoft.com/en-gb/entra/identity/authentication/concept-authentication-external-method-provider
+
+https://learn.microsoft.com/en-gb/entra/identity/authentication/how-to-authentication-external-method-manage
+
 ## Credits, non Microsoft projects used in this setup
 
 https://documentation.openiddict.com/
