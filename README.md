@@ -4,7 +4,7 @@ _Microsoft Entra ID: external authentication methods_
 
 [![.NET](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml)  [![Deploy app to Entra ID Web App](https://github.com/damienbod/MfaServer/actions/workflows/azure-webapps-dotnet-core.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/azure-webapps-dotnet-core.yml)
 
-The FIDO2/passkeys MFA Server is implemented using an ASP.NET Core Web application. The application uses ASP.NET Core Identity to store and persist the users in an Azure SQL database. The MFA server uses passwordless-lib fido2-net-lib to implement the FIDO2 authentication. OpenIddict is used to implement the OpenID Connect flow.
+The FIDO2/passkeys MFA Server is implemented as an ASP.NET Core Web application. Within this application, ASP.NET Core Identity is utilized to store and manage user data in an Azure SQL database. For FIDO2 authentication, the MFA server leverages the passwordless-lib fido2-net-lib. Additionally, OpenIddict is employed to implement the OpenID Connect flow.
 
 ![flow](https://github.com/damienbod/MfaServer/blob/main/images/me-id_external-authn-flows_01.png)
 
@@ -48,7 +48,7 @@ _(OpenIddict, fido2-net-lib, ASP.NET Core Identity)_
 
 ### Core Setup OpenIddict
 
-The Microsoft Entra ID external authentication provider requires an OpenID connect server to interact with. OpenIddict is used to implement this. Any OpenID Connect implementation can be used, as long as you can customize the claims returned in the id_token. ASP.NET Core Identity is used to persist the users to the database.
+The Microsoft Entra ID external authentication provider relies on an OpenID Connect server implementation for interaction. In our implementation, we utilize OpenIddict to achieve this functionality. It’s worth noting that any OpenID Connect implementation can be used, provided that you have the ability to customize the claims returned in the id_token. Additionally, we persist user data to the database using ASP.NET Core Identity.
 
 See [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance.html)
 
