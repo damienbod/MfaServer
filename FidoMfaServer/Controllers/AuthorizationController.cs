@@ -210,8 +210,8 @@ public class AuthorizationController : Controller
                 // update openiddict 5.0.1 => 5.1.0, breaking change causes this to crash.
                 claims.Add(new Claim("amr", "[\"fido\"]", JsonClaimValueTypes.JsonArray));
 
-                var cp = new ClaimsPrincipal();
-                cp.AddIdentity(new ClaimsIdentity(claims, principal.Identity.AuthenticationType));
+                var cp = new ClaimsPrincipal(
+                    new ClaimsIdentity(claims, principal.Identity.AuthenticationType));
 
                 foreach (var claim in cp.Claims)
                 {

@@ -72,6 +72,11 @@ public class LoginModel : PageModel
             throw new UnauthorizedAccessException("invalid id_token, missing oid");
         }
 
+        // Validate tid if the MFA server should only accept users from allowed specific tenants
+        //var tid = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
+        //  .Claims.FirstOrDefault(o => o.Type == "tid");
+        // validate tid claim ...
+
         var user = _applicationDbContext.Users.FirstOrDefault(u => u.EntraIdOid == oid.Value);
 
         if (user == null)
