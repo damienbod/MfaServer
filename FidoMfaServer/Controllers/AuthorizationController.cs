@@ -193,7 +193,10 @@ public class AuthorizationController : Controller
 
                 var requestedClaims = System.Text.Json.JsonSerializer.Deserialize<claims>(request.Claims);
 
+                // The acr claims for the authentication request. This value should match one of the values from the request sent to initiate this request.
+                // Only one acr claim should be returned.
                 principal.AddClaim("acr", "possessionorinherence");
+
                 var sub = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
                     .Claims.First(d => d.Type == "sub");
 
@@ -202,10 +205,12 @@ public class AuthorizationController : Controller
 
                 var claims = principal.Claims.ToList();
 
+                // The amr claims for the authentication method used in authentication.
+                // This value should be returned as an array, and only one method claim should be returned.
                 // update openiddict 5.0.1 => 5.1.0, breaking change causes this to crash.
                 claims.Add(new Claim("amr", "[\"fido\"]", JsonClaimValueTypes.JsonArray));
 
-                ClaimsPrincipal cp = new();
+                var cp = new ClaimsPrincipal();
                 cp.AddIdentity(new ClaimsIdentity(claims, principal.Identity.AuthenticationType));
 
                 foreach (var claim in cp.Claims)
