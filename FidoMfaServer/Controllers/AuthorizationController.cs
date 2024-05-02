@@ -207,7 +207,7 @@ public class AuthorizationController : Controller
 
                 // The amr claims for the authentication method used in authentication.
                 // This value should be returned as an array, and only one method claim should be returned.
-                // update openiddict 5.0.1 => 5.1.0, breaking change causes this to crash.
+                // Openiddict between 5.0.1 => 5.5.0 does not support this.
                 claims.Add(new Claim("amr", "[\"fido\"]", JsonClaimValueTypes.JsonArray));
 
                 var cp = new ClaimsPrincipal(
