@@ -211,7 +211,7 @@ The appsettings need to match your Microsoft Entra ID tenant and the used Azure 
 
 The **IdTokenHintValidation** Folder in the FidoMfaServer project implements the different flow validations.
 
-## Known Issues
+## Known Issues in Demo server
 
 - Only a single FIDO2/passkeys key can be registered per user. In a productive system, multiple key registration must be possible.
 - User would need a recovery in a productive system.
