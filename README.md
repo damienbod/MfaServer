@@ -10,7 +10,7 @@ The FIDO2/passkeys MFA Server is implemented as an ASP.NET Core Web application.
 
 ## Setup Microsoft Entra ID
 
-See the Microsoft Entra ID: external authentication methods documentation.
+See the Microsoft Entra ID: external authentication methods [documentation](https://learn.microsoft.com/en-gb/entra/identity/authentication/concept-authentication-external-method-provider).
 
 ### Microsoft Graph
 
