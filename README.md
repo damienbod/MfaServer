@@ -224,6 +224,8 @@ https://learn.microsoft.com/en-gb/entra/identity/authentication/concept-authenti
 
 https://learn.microsoft.com/en-gb/entra/identity/authentication/how-to-authentication-external-method-manage
 
+https://techcommunity.microsoft.com/t5/microsoft-entra-blog/public-preview-external-authentication-methods-in-microsoft/ba-p/4078808
+
 ## Credits, non Microsoft projects used in this setup
 
 https://documentation.openiddict.com/
