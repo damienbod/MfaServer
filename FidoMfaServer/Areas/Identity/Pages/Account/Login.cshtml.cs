@@ -54,7 +54,7 @@ public class LoginModel : PageModel
             id_token_hint,
             _idTokenHintValidationConfiguration,
             wellKnownEndpoints.SigningKeys,
-            false);
+            true);
 
         if (!idTokenHintValidationResult.Valid)
         {
@@ -73,6 +73,7 @@ public class LoginModel : PageModel
         }
 
         // Validate tid if the MFA server should only accept users from allowed specific tenants
+        // !!! If the tid is not validated, the users are open to phishing attacks. !!!
         //var tid = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
         //  .Claims.FirstOrDefault(o => o.Type == "tid");
         // validate tid claim ...
