@@ -16,6 +16,7 @@ public class LoginModel : PageModel
 {
     private readonly IdTokenHintValidationConfiguration _idTokenHintValidationConfiguration;
     private readonly ApplicationDbContext _applicationDbContext;
+    private readonly bool _testingMode;
 
     [BindProperty(SupportsGet = true)]
     public string? UserName { get; set; }
@@ -24,10 +25,12 @@ public class LoginModel : PageModel
     public string? Name { get; set; }
 
     public LoginModel(IOptions<IdTokenHintValidationConfiguration> idTokenHintValidationConfiguration,
-         ApplicationDbContext applicationDbContext)
+        IConfiguration configuration, ApplicationDbContext applicationDbContext)
     {
         _idTokenHintValidationConfiguration = idTokenHintValidationConfiguration.Value;
         _applicationDbContext = applicationDbContext;
+
+        _testingMode = configuration.GetValue<bool>("TestMode");
     }
 
     public async Task OnGetAsync([FromQuery] string? returnUrl)
@@ -54,7 +57,7 @@ public class LoginModel : PageModel
             id_token_hint,
             _idTokenHintValidationConfiguration,
             wellKnownEndpoints.SigningKeys,
-            true);
+            _testingMode);
 
         if (!idTokenHintValidationResult.Valid)
         {

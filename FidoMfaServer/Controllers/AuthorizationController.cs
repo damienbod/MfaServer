@@ -52,7 +52,7 @@ public class AuthorizationController : Controller
         _userManager = userManager;
         _idTokenHintValidationConfiguration = idTokenHintValidationConfiguration.Value;
 
-        _testingMode = configuration["TestMode"].Equals("true");
+        _testingMode = configuration.GetValue<bool>("TestMode");
     }
 
     [HttpGet("~/connect/authorize")]
