@@ -9,7 +9,7 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    Log.Information("Starting WebHybridClient");
+    Log.Information("Starting MfaIdpImplicitFlowTest");
 
     var builder = WebApplication.CreateBuilder(args);
 
