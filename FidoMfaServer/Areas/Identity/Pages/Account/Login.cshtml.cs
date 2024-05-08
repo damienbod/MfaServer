@@ -64,8 +64,9 @@ public class LoginModel : PageModel
             throw new UnauthorizedAccessException($"invalid id_token: {idTokenHintValidationResult.TokenValidationResult}");
         }
 
-        var oid = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
-            .Claims.FirstOrDefault(o => o.Type == "oid");
+        var oid = ValidateIdTokenHintRequestPayload.GetOid(
+            idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity);
+
 
         Name = idTokenHintValidationResult.TokenValidationResult.ClaimsIdentity
            .Claims.FirstOrDefault(n => n.Type == "name")!.Value;
@@ -81,7 +82,7 @@ public class LoginModel : PageModel
         //  .Claims.FirstOrDefault(o => o.Type == "tid");
         // validate tid claim ...
 
-        var user = _applicationDbContext.Users.FirstOrDefault(u => u.EntraIdOid == oid.Value);
+        var user = _applicationDbContext.Users.FirstOrDefault(u => u.EntraIdOid == oid);
 
         if (user == null)
         {

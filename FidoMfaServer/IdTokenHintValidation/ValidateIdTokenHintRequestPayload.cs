@@ -7,13 +7,13 @@ namespace FidoMfaServer.IdTokenHintValidation;
 
 public static class ValidateIdTokenHintRequestPayload
 {
-    public static (bool Valid, string Reason, string Error) IsValid(ClaimsIdentity claimsIdTokenPrincipal,
+    public static (bool Valid, string Reason, string Error) IsValid(ClaimsIdentity idTokenClaimsIdentity,
         IdTokenHintValidationConfiguration configuration,
         string userEntraIdOid,
         string userName)
     {
         // oid from id_token_hint must match User OID
-        var oid = claimsIdTokenPrincipal.FindFirst("oid").Value;
+        var oid = GetOid(idTokenClaimsIdentity);
         if (!oid!.Equals(userEntraIdOid))
         {
             return (false, "oid parameter has an incorrect value",
@@ -23,7 +23,7 @@ public static class ValidateIdTokenHintRequestPayload
         // aud must match allowed audience if for a specifc app
         if (configuration.ValidateAudience)
         {
-            var aud = claimsIdTokenPrincipal.FindFirst("aud").Value;
+            var aud = idTokenClaimsIdentity.FindFirst("aud").Value;
             if (!aud!.Equals(configuration.Audience))
             {
                 return (false, "client_id parameter has an incorrect value",
@@ -32,7 +32,7 @@ public static class ValidateIdTokenHintRequestPayload
         }
 
         // tid must match allowed tenant
-        var tid = claimsIdTokenPrincipal.FindFirst("tid").Value;
+        var tid = idTokenClaimsIdentity.FindFirst("tid").Value;
         if (!tid!.Equals(configuration.TenantId))
         {
             return (false, "tid parameter has an incorrect value",
@@ -40,7 +40,7 @@ public static class ValidateIdTokenHintRequestPayload
         };
 
         // preferred_username from id_token_hint
-        var preferred_username = GetPreferredUserName(claimsIdTokenPrincipal);
+        var preferred_username = GetPreferredUserName(idTokenClaimsIdentity);
         if (!preferred_username!.ToLower().Equals(userName.ToLower()))
         {
             return (false, "preferred_username parameter has an incorrect value",
@@ -137,5 +137,25 @@ public static class ValidateIdTokenHintRequestPayload
             return false; // Double dot or dot at end of user part.
 
         return true;
+    }
+
+    public static string GetOid(ClaimsIdentity claimsIdentity)
+    {
+        // oid if magic MS namespaces not user
+        var oid = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
+  
+        if (oid != null)
+        {
+            return oid.Value;
+        }
+
+        oid = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "oid");
+
+        if (oid != null)
+        {
+            return oid.Value;
+        }
+
+        return string.Empty;
     }
 }
