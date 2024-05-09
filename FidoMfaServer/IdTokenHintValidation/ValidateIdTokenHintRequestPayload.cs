@@ -51,7 +51,7 @@ public static class ValidateIdTokenHintRequestPayload
     }
 
     /// <summary>
-    /// For prod deployments, the aud, iss, tid claims MUST be validated as well as the signature.
+    /// For prod deployments, the aud, iss, tid, exp claims MUST be validated as well as the signature.
     /// </summary>
     public static async Task<(bool Valid, string Reason, TokenValidationResult TokenValidationResult)> ValidateTokenAndSignatureAsync(
         string jwtToken,

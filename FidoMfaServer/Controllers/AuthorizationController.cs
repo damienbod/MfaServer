@@ -179,7 +179,7 @@ public class AuthorizationController : Controller
 
                 var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
-                // For prod deployments, the aud, iss, tid claims MUST be validated as well as the signature.
+                // For prod deployments, the aud, iss, tid, exp claims MUST be validated as well as the signature.
                 var idTokenHintValidationResult = await ValidateIdTokenHintRequestPayload.ValidateTokenAndSignatureAsync(
                     request.IdTokenHint,
                     _idTokenHintValidationConfiguration,
