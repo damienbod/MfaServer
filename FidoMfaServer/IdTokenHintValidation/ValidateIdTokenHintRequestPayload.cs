@@ -50,6 +50,9 @@ public static class ValidateIdTokenHintRequestPayload
         return (true, string.Empty, string.Empty);
     }
 
+    /// <summary>
+    /// For prod deployments, the aud, iss, tid claims MUST be validated as well as the signature.
+    /// </summary>
     public static async Task<(bool Valid, string Reason, TokenValidationResult TokenValidationResult)> ValidateTokenAndSignatureAsync(
         string jwtToken,
         IdTokenHintValidationConfiguration idTokenConfiguration,

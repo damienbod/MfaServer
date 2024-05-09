@@ -53,6 +53,7 @@ public class LoginModel : PageModel
 
         var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
+        // For prod deployments, the aud, iss, tid claims MUST be validated as well as the signature.
         var idTokenHintValidationResult = await ValidateIdTokenHintRequestPayload.ValidateTokenAndSignatureAsync(
             id_token_hint,
             _idTokenHintValidationConfiguration,
