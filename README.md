@@ -26,7 +26,7 @@ https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authentica
 {
     "@odata.type": "#microsoft.graph.externalAuthenticationMethodConfiguration",
     "displayName": "--name-of-provider--", // Displayed in login
-    "state": "enabled"
+    "state": "enabled",
     "appId": "--app-registration-clientId--", // external authentication app registration, see docs
     "openIdConnectSetting": {
         "clientId": "--your-client_id-from-external-provider--",
