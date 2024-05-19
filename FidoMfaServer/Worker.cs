@@ -29,6 +29,41 @@ public class Worker : IHostedService
             //var clientApp = await manager.FindByClientIdAsync("oidc-implicit-mfa-confidential");
             //await manager.DeleteAsync(clientApp);
 
+            if (await manager.FindByClientIdAsync("oidc-implicit-eam-mfa") is null)
+            {
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "oidc-implicit-eam-mfa",
+                    ConsentType = ConsentTypes.Implicit,
+                    DisplayName = "Microsoft EAM MFA",
+                    DisplayNames =
+                    {
+                        [CultureInfo.GetCultureInfo("fr-FR")] = "Microsoft EAM MFA"
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        new Uri("https://localhost:5001/signout-callback-oidc")
+                    },
+                    RedirectUris =
+                    {
+                        new Uri("https://localhost:5001/signin-oidc"), // local dev
+                        new Uri("https://login.microsoftonline.com/common/federation/externalauthprovider")
+
+                    },
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Revocation,
+                        Permissions.GrantTypes.Implicit,
+                        Permissions.ResponseTypes.IdToken,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles
+                    }
+                });
+            }
+
+            // incorrect name, used in testing
             if (await manager.FindByClientIdAsync("oidc-implicit-mfa-confidential") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
