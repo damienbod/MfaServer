@@ -2,6 +2,8 @@
 
 _Microsoft Entra ID: external authentication methods_
 
+[Implement a Microsoft Entra ID external authentication method using ASP.NET Core and OpenIddict](https://damienbod.com/2024/05/27/implement-a-microsoft-entra-id-external-authentication-method-using-asp-net-core-and-openiddict/)
+
 [![.NET](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/dotnet.yml)  [![Deploy app to Entra ID Web App](https://github.com/damienbod/MfaServer/actions/workflows/azure-webapps-dotnet-core.yml/badge.svg)](https://github.com/damienbod/MfaServer/actions/workflows/azure-webapps-dotnet-core.yml)
 
 The FIDO2/passkeys MFA Server is implemented as an ASP.NET Core Web application. Within this application, ASP.NET Core Identity is utilized to store and manage user data in an Azure SQL database. For FIDO2 authentication, the MFA server leverages the passwordless-lib fido2-net-lib. Additionally, OpenIddict is employed to implement the OpenID Connect flow.
