@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Quartz;
 using Serilog;
+using System;
 using System.Security.Cryptography.X509Certificates;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -124,8 +125,11 @@ internal static class StartupExtensions
                 var signingCertPath = Path.Combine(builder.Environment.ContentRootPath, "signing-certificate.pfx");
                 var encryptionCertPath = Path.Combine(builder.Environment.ContentRootPath, "encryption-certificate.pfx");
 
-                var signingCert = new X509Certificate2(signingCertPath);
-                var encryptionCert = new X509Certificate2(encryptionCertPath);
+                var signingCert = X509CertificateLoader.LoadPkcs12FromFile(Path.Combine(signingCertPath), null);
+                var encryptionCert = X509CertificateLoader.LoadPkcs12FromFile(Path.Combine(encryptionCertPath), null);
+                // replaces
+                //var signingCert = new X509Certificate2(signingCertPath);
+                //var encryptionCert = new X509Certificate2(encryptionCertPath);
 
                 options.AddSigningCertificate(signingCert)
                     .AddEncryptionCertificate(encryptionCert);
