@@ -107,9 +107,9 @@ internal static class StartupExtensions
             {
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("/connect/authorize")
-                          .SetLogoutEndpointUris("/connect/logout")
-                          .SetTokenEndpointUris("/connect/token")
-                          .SetVerificationEndpointUris("/connect/verify");
+                    .SetEndSessionEndpointUris("/connect/logout")
+                    .SetTokenEndpointUris("/connect/token")
+                    .SetEndUserVerificationEndpointUris("/connect/verify");
 
                 // Note: this sample uses the code, device code, password and refresh token flows, but you
                 // can enable the other flows if you need to support implicit or client credentials.
@@ -134,7 +134,7 @@ internal static class StartupExtensions
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
+                       .EnableEndSessionEndpointPassthrough()
                        .EnableTokenEndpointPassthrough()
                        .EnableStatusCodePagesIntegration();
             })
