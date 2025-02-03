@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
 using Quartz;
 using Serilog;
+using System;
 using System.Security.Cryptography.X509Certificates;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -107,9 +108,9 @@ internal static class StartupExtensions
             {
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("/connect/authorize")
-                          .SetLogoutEndpointUris("/connect/logout")
-                          .SetTokenEndpointUris("/connect/token")
-                          .SetVerificationEndpointUris("/connect/verify");
+                    .SetEndSessionEndpointUris("/connect/logout")
+                    .SetTokenEndpointUris("/connect/token")
+                    .SetEndUserVerificationEndpointUris("/connect/verify");
 
                 // Note: this sample uses the code, device code, password and refresh token flows, but you
                 // can enable the other flows if you need to support implicit or client credentials.
@@ -124,8 +125,11 @@ internal static class StartupExtensions
                 var signingCertPath = Path.Combine(builder.Environment.ContentRootPath, "signing-certificate.pfx");
                 var encryptionCertPath = Path.Combine(builder.Environment.ContentRootPath, "encryption-certificate.pfx");
 
-                var signingCert = new X509Certificate2(signingCertPath);
-                var encryptionCert = new X509Certificate2(encryptionCertPath);
+                var signingCert = X509CertificateLoader.LoadPkcs12FromFile(Path.Combine(signingCertPath), null);
+                var encryptionCert = X509CertificateLoader.LoadPkcs12FromFile(Path.Combine(encryptionCertPath), null);
+                // replaces
+                //var signingCert = new X509Certificate2(signingCertPath);
+                //var encryptionCert = new X509Certificate2(encryptionCertPath);
 
                 options.AddSigningCertificate(signingCert)
                     .AddEncryptionCertificate(encryptionCert);
@@ -134,7 +138,7 @@ internal static class StartupExtensions
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
+                       .EnableEndSessionEndpointPassthrough()
                        .EnableTokenEndpointPassthrough()
                        .EnableStatusCodePagesIntegration();
             })

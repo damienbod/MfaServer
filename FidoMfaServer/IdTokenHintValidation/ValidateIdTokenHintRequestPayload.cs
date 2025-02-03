@@ -146,7 +146,7 @@ public static class ValidateIdTokenHintRequestPayload
     {
         // oid if magic MS namespaces not user
         var oid = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
-  
+
         if (oid != null)
         {
             return oid.Value;
